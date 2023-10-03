@@ -61,4 +61,4 @@ jobs:
           script: |
             cd ${{ secrets.SERVER_TARGET_PATH }}
             ls -alh
-            java -jar *.jar
+            nohup java -jar *.jar
