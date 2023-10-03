@@ -59,6 +59,5 @@ jobs:
           port: ${{ secrets.PORT }}
           rm: true
           script: |
-            cd ${{ secrets.SERVER_TARGET_PATH }}
-            ls -alh
-            nohup java -jar *.jar
+            cd deploy
+            ./deploy.sh
