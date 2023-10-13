@@ -36,9 +36,9 @@ public class Heart {
 	private Boolean exist;
 
 	@Builder
-	public Heart(Member member, Program program, Boolean exist) {
+	public Heart(Member member, Program program) {
 		this.member = member;
 		this.program = program;
-		this.exist = exist;
+		this.exist = true;
 	}
 }
