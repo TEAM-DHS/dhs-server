@@ -31,7 +31,7 @@ public class Program extends BaseTimeEntity {
 	private Long programId;
 
 	@ManyToOne
-	@JoinColumn(name = "member_id")
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member host;
 
 	@Column(nullable = false, length = 50)
