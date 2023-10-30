@@ -14,11 +14,11 @@ cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)
 
-if [ -z "$CURRENT_PID" ]; then
-  echo "$TIME_NOW > 현재 실행 중인 애플리케이션이 없습니다" >> $DEPLOY_LOG
+if [ -z $CURRENT_PID ]; then
+  echo "$TIME_NOW > 종료할 애플리케이션이 없습니다" >> $DEPLOY_LOG
 else
   echo "$TIME_NOW > 실행 중인 $CURRENT_PID 애플리케이션 종료 " >> $DEPLOY_LOG
-  kill -9 "$CURRENT_PID"
+  kill -9 $CURRENT_PID
 fi
 
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
