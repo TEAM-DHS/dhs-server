@@ -1,0 +1,23 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/dhs
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+hooks:
+  #  ApplicationStop:
+  #  BeforeInstall:
+  #  AfterInstall:
+  ApplicationStart:
+    - location: scripts/run_server.sh
+      timeout: 60
+      runas: ubuntu
+#  ValidateService:
