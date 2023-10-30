@@ -13,11 +13,7 @@ permissions:
     group: ubuntu
 
 hooks:
-  #  ApplicationStop:
-  #  BeforeInstall:
-  #  AfterInstall:
   ApplicationStart:
-    - location: scripts/run_server.sh
-      timeout: 60
+    - location: scripts/start_server.sh
+      timeout: 300
       runas: ubuntu
-#  ValidateService:
