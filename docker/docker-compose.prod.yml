@@ -1,0 +1,20 @@
+services:
+  spring:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    expose:
+      - "8080"
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ../config/nginx:/etc/nginx/conf.d
+      - /data/certbot/conf:/etc/letsencrypt
+      - /data/certbot/www:/var/www/certbot
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - spring
