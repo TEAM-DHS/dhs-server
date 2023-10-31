@@ -34,7 +34,7 @@ jobs:
           chmod +x gradlew
           ./gradlew bootJar
 
-      - name: Copy setting files to server
+      - name: Copy files to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}
@@ -42,20 +42,8 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           rm: true
-          source: "docker/*.prod.yml,docker/Dockerfile,config/nginx/nginx.conf"
-          target: ${{ secrets.SETTING_FILES_PATH }}
-
-      - name: Copy jar file to server
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          rm: true
-          source: "backend/build/libs/*.jar"
-          target: ${{ secrets.JAR_FILE_PATH }}
-          strip_components: 3
+          source: "docker/*.prod.yml,docker/Dockerfile,config/nginx/nginx.conf,build/libs/*.jar"
+          target: ${{ secrets.FILE_PATH }}
 
       - name: Executing remote ssh commands to run docker
         uses: appleboy/ssh-action@v1.0.0
