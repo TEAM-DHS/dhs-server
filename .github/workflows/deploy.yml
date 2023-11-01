@@ -66,6 +66,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd app/docker
-            sudo docker rm -f $(docker ps -qa)
+            sudo docker rm -f $(sudo docker ps -qa)
             sudo docker compose -f docker-compose.prod.yml up -d
             sudo docker image prune -f
