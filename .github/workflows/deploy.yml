@@ -1,4 +1,4 @@
-name: Deploy to Amazon EC2
+name: scp files to Amazon EC2
 
 on:
   push:
@@ -7,19 +7,10 @@ on:
       - 'develop'
       - 'deploy/**'
 
-env:
-  S3_BUCKET_NAME: dhs-s3-for-deploy
-  CODE_DEPLOY_APPLICATION_NAME: dhs-codedeploy
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: dhs-codedeploy-dg
-
-permissions:
-  contents: read
-
 jobs:
-  deploy:
-    name: Deploy
+  docker:
+    name: Docker
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
       - name: Checkout
@@ -41,30 +32,30 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Build with Gradle
-        working-directory: ${{ env.wd }}
         run: |
           chmod +x gradlew
           ./gradlew bootJar
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.4
         with:
-          aws-access-key-id: ${{ secrets.AWS_IAM_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_IAM_PRIVATE_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          overwrite: true
+          source: "docker/*.prod.yml,docker/Dockerfile,config/nginx/nginx.conf,build/libs/*.jar"
+          target: ${{ secrets.FILE_PATH }}
 
-      - name: Upload to AWS S3
-        run: |
-          aws deploy push \
-            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-            --ignore-hidden-files \
-            --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
-            --source .
-
-      - name: Deploy to AWS EC2 from S3
-        run: |
-          aws deploy create-deployment \
-            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-            --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-            --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.zip,bundleType=zip
+      - name: Executing remote ssh commands to run docker
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd app/docker
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker compose -f docker-compose.prod.yml up -d
+            sudo docker image prune -f
