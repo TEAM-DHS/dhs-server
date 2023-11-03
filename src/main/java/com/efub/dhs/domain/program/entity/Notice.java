@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.efub.dhs.global.BaseTimeEntity;
+import com.efub.dhs.global.entity.BaseTimeEntity;
 
 import lombok.Builder;
 import lombok.Getter;
