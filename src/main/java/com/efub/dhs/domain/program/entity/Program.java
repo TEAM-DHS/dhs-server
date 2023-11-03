@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.efub.dhs.domain.member.entity.Member;
-import com.efub.dhs.global.BaseTimeEntity;
+import com.efub.dhs.global.entity.BaseTimeEntity;
 
 import lombok.Builder;
 import lombok.Getter;

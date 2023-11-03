@@ -1,4 +1,4 @@
-package com.efub.dhs.global;
+package com.efub.dhs.global.entity;
 
 import java.time.LocalDateTime;
 
