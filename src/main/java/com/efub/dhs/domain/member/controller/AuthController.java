@@ -1,5 +1,7 @@
 package com.efub.dhs.domain.member.controller;
 
+import static com.efub.dhs.global.jwt.utils.JwtUtils.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -11,13 +13,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.efub.dhs.domain.member.dto.AuthRequestDto;
-import com.efub.dhs.domain.member.dto.LogInResponseDto;
+import com.efub.dhs.domain.member.dto.AuthResponseDto;
 import com.efub.dhs.domain.member.dto.SignUpResponseDto;
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.member.service.AuthService;
 import com.efub.dhs.global.jwt.entity.JwtToken;
 import com.efub.dhs.global.jwt.service.JwtService;
-import com.efub.dhs.global.jwt.utils.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,15 +38,22 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public LogInResponseDto logIn(@RequestBody @Valid AuthRequestDto requestDto) {
+	public AuthResponseDto logIn(@RequestBody @Valid AuthRequestDto requestDto) {
 		JwtToken jwtToken = authService.logIn(requestDto.getUsername(), requestDto.getPassword());
-		return new LogInResponseDto(JwtUtils.BEARER, jwtToken.getAccessToken());
+		return new AuthResponseDto(BEARER, jwtToken.getAccessToken());
 	}
 
 	@PostMapping("/logout")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void logout(HttpServletRequest request) {
-		String accessToken = JwtUtils.resolveToken(request);
+		String accessToken = resolveToken(request);
 		jwtService.removeJwtToken(accessToken);
+	}
+
+	@PostMapping("/refresh-token")
+	public AuthResponseDto refreshToken(HttpServletRequest request) {
+		String accessToken = resolveToken(request);
+		JwtToken jwtToken = jwtService.refreshToken(accessToken);
+		return new AuthResponseDto(BEARER, jwtToken.getAccessToken());
 	}
 }
