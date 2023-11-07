@@ -1,8 +1,9 @@
 services:
   spring:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: openjdk:11-jre
+    volumes:
+      - "../build/libs:/app"
+    entrypoint: [ "java", "-jar", "/app/*.jar" ]
     expose:
       - "8080"
     depends_on:
