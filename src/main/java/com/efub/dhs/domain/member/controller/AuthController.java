@@ -1,4 +1,4 @@
-package com.efub.dhs.global.auth.controller;
+package com.efub.dhs.domain.member.controller;
 
 import javax.validation.Valid;
 
@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.efub.dhs.domain.member.dto.AuthRequestDto;
+import com.efub.dhs.domain.member.dto.LogInResponseDto;
+import com.efub.dhs.domain.member.dto.SignUpResponseDto;
 import com.efub.dhs.domain.member.entity.Member;
-import com.efub.dhs.global.auth.dto.SignUpRequestDto;
-import com.efub.dhs.global.auth.dto.SignUpResponseDto;
-import com.efub.dhs.global.auth.service.AuthService;
+import com.efub.dhs.domain.member.service.AuthService;
+import com.efub.dhs.global.jwt.entity.JwtToken;
+import com.efub.dhs.global.jwt.utils.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,8 +28,14 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SignUpResponseDto signUp(@RequestBody @Valid SignUpRequestDto requestDto) {
+	public SignUpResponseDto signUp(@RequestBody @Valid AuthRequestDto requestDto) {
 		Member member = authService.signUp(requestDto.getUsername(), requestDto.getPassword());
 		return new SignUpResponseDto(member.getMemberId(), member.getUsername());
+	}
+
+	@PostMapping("/login")
+	public LogInResponseDto logIn(@RequestBody @Valid AuthRequestDto requestDto) {
+		JwtToken jwtToken = authService.logIn(requestDto.getUsername(), requestDto.getPassword());
+		return new LogInResponseDto(JwtUtils.BEARER, jwtToken.getAccessToken());
 	}
 }
