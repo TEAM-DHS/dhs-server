@@ -3,7 +3,7 @@ services:
     image: openjdk:11-jre
     volumes:
       - "../build/libs:/app"
-    entrypoint: [ "java", "-jar", "/app/*.jar" ]
+    entrypoint: [ "java", "-jar", "/app/dhs-0.0.1-SNAPSHOT.jar" ]
     expose:
       - "8080"
     depends_on:
