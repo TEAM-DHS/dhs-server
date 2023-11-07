@@ -9,13 +9,19 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.efub.dhs.global.jwt.auth.JwtAuthProvider;
+import com.efub.dhs.global.jwt.auth.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final JwtAuthProvider jwtAuthProvider;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -30,6 +36,7 @@ public class SecurityConfig {
 			.antMatchers("/auth/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
+			.addFilterBefore(new JwtFilter(jwtAuthProvider), UsernamePasswordAuthenticationFilter.class)
 			.build();
 	}
 
