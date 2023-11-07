@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           overwrite: true
-          source: "docker/*.prod.yml,docker/Dockerfile,config/nginx/nginx.conf,build/libs/*.jar"
+          source: "docker/*.prod.yml,config/nginx/nginx.conf,build/libs/*.jar"
           target: ${{ secrets.FILE_PATH }}
 
       - name: Executing remote ssh commands to run docker
