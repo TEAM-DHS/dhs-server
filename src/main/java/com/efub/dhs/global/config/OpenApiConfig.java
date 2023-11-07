@@ -12,7 +12,10 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
-@OpenAPIDefinition(servers = {@Server(url = "http://localhost:8080", description = "Local Development Server URL")})
+@OpenAPIDefinition(servers = {
+	@Server(url = "http://localhost:8080", description = "Local Development Server URL"),
+	@Server(url = "https://api.daehaengsa.kro.kr", description = "Production Server URL")
+})
 public class OpenApiConfig {
 
 	public static final String BEARER_SCHEME = "Bearer";

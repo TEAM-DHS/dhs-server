@@ -19,16 +19,27 @@ services:
       TZ: Asia/Seoul
 
   spring:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: openjdk:11-jre-slim
+    volumes:
+      - "../build/libs:/app"
+    entrypoint: [ "java", "-jar", "/app/dhs-0.0.1-SNAPSHOT.jar" ]
     ports:
       - 8080:8080
     depends_on:
       mysql:
         condition: service_healthy
+      redis:
+        condition: service_started
     environment:
       MYSQL_HOST: mysql
 
+  redis:
+    image: redis:7.2.3-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
 volumes:
   mysql-data:
+  redis-data:
