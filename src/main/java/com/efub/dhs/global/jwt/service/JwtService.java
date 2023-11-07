@@ -16,4 +16,10 @@ public class JwtService {
 	public JwtToken saveJwtToken(JwtToken jwtToken) {
 		return jwtRepository.save(jwtToken);
 	}
+
+	public void removeJwtToken(String accessToken) {
+		JwtToken jwtToken = jwtRepository.findByAccessToken(accessToken)
+			.orElseThrow(() -> new SecurityException("JWT token is invalid."));
+		jwtRepository.delete(jwtToken);
+	}
 }
