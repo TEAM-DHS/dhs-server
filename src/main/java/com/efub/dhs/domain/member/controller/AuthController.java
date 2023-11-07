@@ -1,5 +1,6 @@
 package com.efub.dhs.domain.member.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import com.efub.dhs.domain.member.dto.SignUpResponseDto;
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.member.service.AuthService;
 import com.efub.dhs.global.jwt.entity.JwtToken;
+import com.efub.dhs.global.jwt.service.JwtService;
 import com.efub.dhs.global.jwt.utils.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final AuthService authService;
+	private final JwtService jwtService;
 
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -37,5 +40,12 @@ public class AuthController {
 	public LogInResponseDto logIn(@RequestBody @Valid AuthRequestDto requestDto) {
 		JwtToken jwtToken = authService.logIn(requestDto.getUsername(), requestDto.getPassword());
 		return new LogInResponseDto(JwtUtils.BEARER, jwtToken.getAccessToken());
+	}
+
+	@PostMapping("/logout")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void logout(HttpServletRequest request) {
+		String accessToken = JwtUtils.resolveToken(request);
+		jwtService.removeJwtToken(accessToken);
 	}
 }
