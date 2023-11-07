@@ -5,6 +5,8 @@ services:
       dockerfile: docker/Dockerfile
     expose:
       - "8080"
+    depends_on:
+      - redis
 
   nginx:
     image: nginx:latest
@@ -18,3 +20,10 @@ services:
       - 443:443
     depends_on:
       - spring
+
+  redis:
+    image: redis:7.2.3-alpine
+    expose:
+      - "6379"
+    volumes:
+      - /data/redis:/data/redis
