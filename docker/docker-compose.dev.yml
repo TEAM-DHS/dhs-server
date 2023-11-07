@@ -19,9 +19,10 @@ services:
       TZ: Asia/Seoul
 
   spring:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: openjdk:11-jre-slim
+    volumes:
+      - "../build/libs:/app"
+    entrypoint: [ "java", "-jar", "/app/dhs-0.0.1-SNAPSHOT.jar" ]
     ports:
       - 8080:8080
     depends_on:
