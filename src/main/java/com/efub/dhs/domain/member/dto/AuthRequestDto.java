@@ -1,4 +1,4 @@
-package com.efub.dhs.global.auth.dto;
+package com.efub.dhs.domain.member.dto;
 
 import javax.validation.constraints.NotBlank;
 
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SignUpRequestDto {
+public class AuthRequestDto {
 
 	@NotBlank(message = "아이디는 필수입니다.")
 	private String username;
