@@ -33,7 +33,7 @@ public class SecurityConfig {
 			.and()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.GET).permitAll()
-			.antMatchers("/auth/**").permitAll()
+			.antMatchers("/auth/**", "/oauth/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilterBefore(new JwtFilter(jwtAuthProvider), UsernamePasswordAuthenticationFilter.class)
