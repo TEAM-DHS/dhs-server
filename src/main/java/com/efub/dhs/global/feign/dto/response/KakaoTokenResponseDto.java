@@ -1,10 +1,8 @@
 package com.efub.dhs.global.feign.dto.response;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
 @NoArgsConstructor
 public class KakaoTokenResponseDto {
@@ -14,4 +12,8 @@ public class KakaoTokenResponseDto {
 	private int expires_in;
 	private String refresh_token;
 	private int refresh_token_expires_in;
+
+	public String getAccessToken() {
+		return access_token;
+	}
 }
