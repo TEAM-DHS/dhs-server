@@ -39,9 +39,7 @@ public class KakaoOAuthService {
 	private String kakaoCredentials;
 
 	public JwtToken signUp(String redirectUri, String code) {
-		log.debug("[KAKAO] 로그인 시작");
 		String kakaoToken = getKakaoToken(redirectUri, code);
-		log.debug("[KAKAO] 토큰: {}", kakaoToken);
 		String username = getKakaoUsername(kakaoToken);
 		log.debug("[KAKAO] 회원 ID: {}", username);
 		createMember(username);
@@ -74,7 +72,6 @@ public class KakaoOAuthService {
 				.username(username)
 				.password(passwordEncoder.encode(kakaoCredentials))
 				.build();
-			log.debug("[KAKAO] 회원 가입 완료 username: {}", username);
 			memberRepository.save(member);
 		}
 	}
