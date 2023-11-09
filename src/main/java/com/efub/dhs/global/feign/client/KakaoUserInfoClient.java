@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.efub.dhs.global.feign.dto.response.KakaoUserInfoResponseDto;
 
-@FeignClient(name = "KakaoUserInfoClient", url = "https://kapi.kakao.com/v1/user/access_token_info")
+@FeignClient(name = "kakaoApi", url = "https://kapi.kakao.com/v1/user/access_token_info")
 public interface KakaoUserInfoClient {
 
 	@GetMapping
