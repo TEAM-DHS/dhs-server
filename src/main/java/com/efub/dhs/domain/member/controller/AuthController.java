@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.efub.dhs.domain.member.dto.AuthRequestDto;
 import com.efub.dhs.domain.member.dto.AuthResponseDto;
-import com.efub.dhs.domain.member.dto.SignUpResponseDto;
+import com.efub.dhs.domain.member.dto.ProfileResponseDto;
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.member.service.AuthService;
 import com.efub.dhs.global.jwt.entity.JwtToken;
@@ -32,9 +32,9 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SignUpResponseDto signUp(@RequestBody @Valid AuthRequestDto requestDto) {
+	public ProfileResponseDto signUp(@RequestBody @Valid AuthRequestDto requestDto) {
 		Member member = authService.signUp(requestDto.getUsername(), requestDto.getPassword());
-		return new SignUpResponseDto(member.getMemberId(), member.getUsername());
+		return new ProfileResponseDto(member.getUsername());
 	}
 
 	@PostMapping("/login")
