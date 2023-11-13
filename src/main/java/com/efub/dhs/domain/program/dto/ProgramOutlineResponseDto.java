@@ -24,7 +24,7 @@ public class ProgramOutlineResponseDto {
 		this.programId = program.getProgramId();
 		this.title = program.getTitle();
 		this.category = program.getCategory();
-		this.thumbnailImage = program.getThumbnailImage();
+		this.thumbnailImage = program.getImages().get(0).getUrl();
 		this.remainingDays = remainingDays;
 		this.isOpen = program.getIsOpen();
 		this.goal = goal;
