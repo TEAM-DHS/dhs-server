@@ -16,7 +16,6 @@ public class ProgramDto {
 	private Long programId;
 	private String title;
 	private Category category;
-	private String thumbnailImage;
 	private LocalDateTime schedule;
 	private String postalCode;
 	private String location;
@@ -37,7 +36,6 @@ public class ProgramDto {
 		this.programId = program.getProgramId();
 		this.title = program.getTitle();
 		this.category = program.getCategory();
-		this.thumbnailImage = program.getThumbnailImage();
 		this.schedule = program.getSchedule();
 		this.postalCode = program.getPostalCode();
 		this.location = program.getLocation();

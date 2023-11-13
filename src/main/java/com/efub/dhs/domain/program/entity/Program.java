@@ -37,9 +37,6 @@ public class Program extends BaseTimeEntity {
 	@Column(nullable = false, length = 50)
 	private String title;
 
-	@Column(name = "thumbnail_image", nullable = false)
-	private String thumbnailImage;
-
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)
 	private Category category;
@@ -96,14 +93,13 @@ public class Program extends BaseTimeEntity {
 	private List<Notice> notices;
 
 	@Builder
-	public Program(Member host, String title, String thumbnailImage, Category category,
+	public Program(Member host, String title, Category category,
 		LocalDateTime schedule, String location, String postalCode, LocalDateTime deadline,
 		Boolean isOpen, Integer targetNumber, String content, String depositBank,
 		String depositName, String depositAccount, String price, String hostName,
 		String hostDescription, List<ProgramImage> images, List<Notice> notices) {
 		this.host = host;
 		this.title = title;
-		this.thumbnailImage = thumbnailImage;
 		this.category = category;
 		this.schedule = schedule;
 		this.location = location;
