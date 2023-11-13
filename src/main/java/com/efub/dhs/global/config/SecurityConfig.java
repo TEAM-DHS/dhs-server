@@ -17,7 +17,7 @@ import com.efub.dhs.global.jwt.auth.JwtFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -34,6 +34,7 @@ public class SecurityConfig {
 			.authorizeRequests()
 			.antMatchers(HttpMethod.GET).permitAll()
 			.antMatchers("/auth/**", "/oauth/**").permitAll()
+			.antMatchers("/members/**").authenticated()
 			.anyRequest().authenticated()
 			.and()
 			.addFilterBefore(new JwtFilter(jwtAuthProvider), UsernamePasswordAuthenticationFilter.class)
