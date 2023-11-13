@@ -96,7 +96,8 @@ public class ProgramService {
 	public ProgramMemberDto findProgramMemberInfo(Program program, Member member) {
 		Boolean hasLike = heartService.existsByMemberAndProgram(member, program);
 		Boolean hasRegistration = registrationService.existsByMemberAndProgram(member, program);
-		return new ProgramMemberDto(hasLike, hasRegistration);
+		Boolean isHost = program.getHost().equals(member);
+		return new ProgramMemberDto(hasLike, hasRegistration, isHost);
 	}
 
 	public List<ProgramOutlineResponseDto> findSimilarPrograms(Program program, Member member) {
