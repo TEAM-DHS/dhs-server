@@ -54,7 +54,7 @@ public class ProgramRegistryRequestDto {
 		return Program.builder()
 			.host(member)
 			.title(title)
-			.category(Category.valueOf(category))
+			.category(Category.from(category))
 			.schedule(schedule)
 			.location(location)
 			.postalCode(postalCode)

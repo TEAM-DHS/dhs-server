@@ -1,5 +1,7 @@
 package com.efub.dhs.domain.program.entity;
 
+import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -12,4 +14,11 @@ public enum Category {
 	ETC("기타");
 
 	private final String name;
+
+	public static Category from(String name) {
+		return Arrays.stream(Category.values())
+			.filter(category -> category.name.equals(name))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("Invalid Category name: " + name));
+	}
 }
