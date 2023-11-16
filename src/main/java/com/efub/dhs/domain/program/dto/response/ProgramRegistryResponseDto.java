@@ -1,4 +1,4 @@
-package com.efub.dhs.domain.program.dto;
+package com.efub.dhs.domain.program.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

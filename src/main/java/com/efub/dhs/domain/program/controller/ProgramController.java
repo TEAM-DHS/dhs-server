@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.efub.dhs.domain.program.dto.ProgramDetailResponseDto;
-import com.efub.dhs.domain.program.dto.ProgramRegistryRequestDto;
-import com.efub.dhs.domain.program.dto.ProgramRegistryResponseDto;
+import com.efub.dhs.domain.program.dto.request.ProgramRegistryRequestDto;
+import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramRegistryResponseDto;
 import com.efub.dhs.domain.program.service.ProgramService;
 
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,9 @@
-package com.efub.dhs.domain.program.dto;
+package com.efub.dhs.domain.program.dto.response;
 
 import java.util.List;
+
+import com.efub.dhs.domain.program.dto.ProgramDto;
+import com.efub.dhs.domain.program.dto.ProgramMemberDto;
 
 import lombok.AccessLevel;
 import lombok.Getter;
