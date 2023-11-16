@@ -20,6 +20,7 @@ import com.efub.dhs.global.feign.dto.response.KakaoTokenResponseDto;
 import com.efub.dhs.global.feign.dto.response.KakaoUserInfoResponseDto;
 import com.efub.dhs.global.jwt.auth.JwtAuthProvider;
 import com.efub.dhs.global.jwt.entity.JwtToken;
+import com.efub.dhs.global.jwt.service.JwtService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,8 @@ public class KakaoOAuthService {
 	private final KakaoTokenClient kakaoTokenClient;
 	private final KakaoUserInfoClient kakaoUserInfoClient;
 	private final MemberRepository memberRepository;
-	private final AuthService authService;
 	private final JwtAuthProvider jwtAuthProvider;
+	private final JwtService jwtService;
 
 	@Value("${kakao.client-id}")
 	private String clientId;
@@ -45,7 +46,8 @@ public class KakaoOAuthService {
 		createMember(username);
 		Authentication authentication = new UsernamePasswordAuthenticationToken(
 			username, null, AuthorityUtils.createAuthorityList("ROLE_USER"));
-		return jwtAuthProvider.generateJwtToken(authentication);
+		JwtToken jwtToken = jwtAuthProvider.generateJwtToken(authentication);
+		return jwtService.saveJwtToken(jwtToken);
 	}
 
 	private String getKakaoToken(String redirectUri, String code) {
