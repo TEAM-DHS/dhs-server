@@ -1,5 +1,7 @@
 package com.efub.dhs.domain.program.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +33,7 @@ public class ProgramController {
 
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ProgramRegistryResponseDto registerProgram(@RequestBody ProgramRegistryRequestDto requestDto) {
+	public ProgramRegistryResponseDto registerProgram(@RequestBody @Valid ProgramRegistryRequestDto requestDto) {
 		return new ProgramRegistryResponseDto(programService.registerProgram(requestDto));
 	}
 }
