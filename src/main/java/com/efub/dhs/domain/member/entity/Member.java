@@ -36,6 +36,7 @@ public class Member {
 	}
 
 	public void convertToOAuthUser() {
+		this.password = null;
 		this.isOAuthUser = true;
 	}
 }
