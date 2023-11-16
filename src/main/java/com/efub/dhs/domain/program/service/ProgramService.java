@@ -19,6 +19,7 @@ import com.efub.dhs.domain.program.dto.ProgramDetailResponseDto;
 import com.efub.dhs.domain.program.dto.ProgramDto;
 import com.efub.dhs.domain.program.dto.ProgramMemberDto;
 import com.efub.dhs.domain.program.dto.ProgramOutlineResponseDto;
+import com.efub.dhs.domain.program.dto.ProgramRegistryRequestDto;
 import com.efub.dhs.domain.program.entity.Notice;
 import com.efub.dhs.domain.program.entity.Program;
 import com.efub.dhs.domain.program.entity.ProgramImage;
@@ -31,7 +32,7 @@ import com.efub.dhs.global.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class ProgramService {
 
@@ -42,6 +43,7 @@ public class ProgramService {
 	private final HeartService heartService;
 	private final RegistrationService registrationService;
 
+	@Transactional(readOnly = true)
 	public ProgramDetailResponseDto findProgramById(Long programId) {
 		Program program = programRepository.findById(programId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 ID의 행사를 찾을 수 없습니다."));
@@ -110,5 +112,16 @@ public class ProgramService {
 				findGoalByProgram(similarProgram.getTargetNumber(), similarProgram.getRegistrantNumber()),
 				heartService.existsByMemberAndProgram(member, program))
 		).collect(Collectors.toList());
+	}
+
+	public Long registerProgram(ProgramRegistryRequestDto requestDto) {
+		String username = SecurityUtils.getCurrentUsername();
+		Member member = memberRepository.findByUsername(username)
+			.orElseThrow(() -> new IllegalArgumentException("해당 아이디의 회원을 찾을 수 없습니다."));
+		Program program = requestDto.toEntity(member);
+		Long programId = programRepository.save(program).getProgramId();
+		List<ProgramImage> images = program.getImages();
+		programImageRepository.saveAll(images);
+		return programId;
 	}
 }
