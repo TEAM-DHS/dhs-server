@@ -39,6 +39,14 @@ public class Heart {
 	public Heart(Member member, Program program) {
 		this.member = member;
 		this.program = program;
+		this.exist = false;
+	}
+
+	public void activateHeart() {
 		this.exist = true;
+	}
+
+	public void deactivateHeart() {
+		this.exist = false;
 	}
 }
