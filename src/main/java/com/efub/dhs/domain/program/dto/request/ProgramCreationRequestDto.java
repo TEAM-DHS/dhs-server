@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProgramRegistryRequestDto {
+public class ProgramCreationRequestDto {
 
 	@NotBlank
 	private String title;

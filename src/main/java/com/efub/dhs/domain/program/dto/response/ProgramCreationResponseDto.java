@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ProgramRegistryResponseDto {
+public class ProgramCreationResponseDto {
 
 	private long programId;
 }

@@ -68,19 +68,18 @@ public class Registration {
 	private String refundName;
 
 	@Builder
-	public Registration(Member member, Program program, String registrantName,
-		String registrantPhone, Boolean depositCheck, String depositName,
-		LocalDateTime depositDate, String depositAmount, RefundStatus refundStatus,
+	public Registration(Member member, Program program, String registrantName, String registrantPhone,
+		String depositName, LocalDateTime depositDate, String depositAmount,
 		String refundBank, String refundAccount, String refundName) {
 		this.member = member;
 		this.program = program;
 		this.registrantName = registrantName;
 		this.registrantPhone = registrantPhone;
-		this.depositCheck = depositCheck;
+		this.depositCheck = false;
 		this.depositName = depositName;
 		this.depositDate = depositDate;
 		this.depositAmount = depositAmount;
-		this.refundStatus = refundStatus;
+		this.refundStatus = RefundStatus.NONE;
 		this.refundBank = refundBank;
 		this.refundAccount = refundAccount;
 		this.refundName = refundName;

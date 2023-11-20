@@ -8,13 +8,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.efub.dhs.domain.program.dto.request.ProgramRegistryRequestDto;
+import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
+import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
+import com.efub.dhs.domain.program.dto.response.ProgramCreationResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
-import com.efub.dhs.domain.program.dto.response.ProgramRegistryResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramLikedResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramRegistrationResponseDto;
+import com.efub.dhs.domain.program.service.ProgramMemberService;
 import com.efub.dhs.domain.program.service.ProgramService;
+import com.efub.dhs.domain.registration.entity.Registration;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class ProgramController {
 
 	private final ProgramService programService;
+	private final ProgramMemberService programMemberService;
 
 	@GetMapping("/{programId}")
 	@ResponseStatus(value = HttpStatus.OK)
@@ -33,7 +40,20 @@ public class ProgramController {
 
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ProgramRegistryResponseDto registerProgram(@RequestBody @Valid ProgramRegistryRequestDto requestDto) {
-		return new ProgramRegistryResponseDto(programService.registerProgram(requestDto));
+	public ProgramCreationResponseDto createProgram(@RequestBody @Valid ProgramCreationRequestDto requestDto) {
+		return new ProgramCreationResponseDto(programService.createProgram(requestDto));
+	}
+
+	@PostMapping("/{programId}")
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public ProgramRegistrationResponseDto applyProgram(@PathVariable Long programId,
+		@RequestBody @Valid ProgramRegistrationRequestDto requestDto) {
+		Registration savedRegistration = programService.registerProgram(programId, requestDto);
+		return ProgramRegistrationResponseDto.from(savedRegistration);
+	}
+
+	@GetMapping("/liked")
+	public ProgramLikedResponseDto findProgramLiked(@RequestParam int page) {
+		return programMemberService.findProgramLiked(page);
 	}
 }

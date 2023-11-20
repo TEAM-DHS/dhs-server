@@ -17,7 +17,8 @@ import com.efub.dhs.domain.program.dto.ImageDto;
 import com.efub.dhs.domain.program.dto.NoticeDto;
 import com.efub.dhs.domain.program.dto.ProgramDto;
 import com.efub.dhs.domain.program.dto.ProgramMemberDto;
-import com.efub.dhs.domain.program.dto.request.ProgramRegistryRequestDto;
+import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
+import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
 import com.efub.dhs.domain.program.entity.Notice;
@@ -26,6 +27,7 @@ import com.efub.dhs.domain.program.entity.ProgramImage;
 import com.efub.dhs.domain.program.repository.NoticeRepository;
 import com.efub.dhs.domain.program.repository.ProgramImageRepository;
 import com.efub.dhs.domain.program.repository.ProgramRepository;
+import com.efub.dhs.domain.registration.entity.Registration;
 import com.efub.dhs.domain.registration.service.RegistrationService;
 import com.efub.dhs.global.utils.SecurityUtils;
 
@@ -43,14 +45,22 @@ public class ProgramService {
 	private final HeartService heartService;
 	private final RegistrationService registrationService;
 
+	public Member getCurrentUser() {
+		String username = SecurityUtils.getCurrentUsername();
+		return memberRepository.findByUsername(username)
+			.orElseThrow(() -> new IllegalArgumentException("해당 아이디의 회원을 찾을 수 없습니다."));
+	}
+
+	private Program getProgram(Long programId) {
+		return programRepository.findById(programId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 ID의 행사를 찾을 수 없습니다."));
+	}
+
 	@Transactional(readOnly = true)
 	public ProgramDetailResponseDto findProgramById(Long programId) {
-		Program program = programRepository.findById(programId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 ID의 행사를 찾을 수 없습니다."));
+		Program program = getProgram(programId);
 
-		String username = SecurityUtils.getCurrentUsername();
-		Member member = memberRepository.findByUsername(username)
-			.orElseThrow(() -> new IllegalArgumentException("해당 아이디의 회원을 찾을 수 없습니다."));
+		Member currentUser = getCurrentUser();
 
 		Integer remainingDays = calculateRemainingDays(program.getDeadline());
 
@@ -58,8 +68,8 @@ public class ProgramService {
 
 		return new ProgramDetailResponseDto(
 			findProgramInfo(program, remainingDays, goal),
-			findProgramMemberInfo(program, member),
-			findSimilarPrograms(program, member)
+			findProgramMemberInfo(program, currentUser),
+			findSimilarPrograms(program, currentUser)
 		);
 	}
 
@@ -105,23 +115,32 @@ public class ProgramService {
 	public List<ProgramOutlineResponseDto> findSimilarPrograms(Program program, Member member) {
 		List<Program> similarPrograms =
 			programRepository.findTop3ByCategory(program.getCategory());
+		return convertToProgramOutlineResponseDtoList(similarPrograms, member);
+	}
 
-		return similarPrograms.stream().map(similarProgram ->
-			new ProgramOutlineResponseDto(similarProgram,
-				calculateRemainingDays(similarProgram.getDeadline()),
-				findGoalByProgram(similarProgram.getTargetNumber(), similarProgram.getRegistrantNumber()),
+	public List<ProgramOutlineResponseDto> convertToProgramOutlineResponseDtoList(
+		List<Program> programList, Member member) {
+		return programList.stream().map(program ->
+			new ProgramOutlineResponseDto(program,
+				calculateRemainingDays(program.getDeadline()),
+				findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
 				heartService.existsByMemberAndProgram(member, program))
 		).collect(Collectors.toList());
 	}
 
-	public Long registerProgram(ProgramRegistryRequestDto requestDto) {
-		String username = SecurityUtils.getCurrentUsername();
-		Member member = memberRepository.findByUsername(username)
-			.orElseThrow(() -> new IllegalArgumentException("해당 아이디의 회원을 찾을 수 없습니다."));
-		Program program = requestDto.toEntity(member);
+	public Long createProgram(ProgramCreationRequestDto requestDto) {
+		Member currentUser = getCurrentUser();
+		Program program = requestDto.toEntity(currentUser);
 		Long programId = programRepository.save(program).getProgramId();
 		List<ProgramImage> images = program.getImages();
 		programImageRepository.saveAll(images);
 		return programId;
+	}
+
+	public Registration registerProgram(Long programId, ProgramRegistrationRequestDto requestDto) {
+		Member currentUser = getCurrentUser();
+		Program program = getProgram(programId);
+		Registration registration = requestDto.toEntity(currentUser, program);
+		return registrationService.saveRegistration(registration);
 	}
 }
