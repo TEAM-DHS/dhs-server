@@ -2,6 +2,7 @@ package com.efub.dhs.domain.program.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -93,11 +94,10 @@ public class Program extends BaseTimeEntity {
 	private List<Notice> notices;
 
 	@Builder
-	public Program(Member host, String title, Category category,
-		LocalDateTime schedule, String location, String postalCode, LocalDateTime deadline,
-		Boolean isOpen, Integer targetNumber, String content, String depositBank,
+	public Program(Member host, String title, Category category, LocalDateTime schedule, String location,
+		String postalCode, LocalDateTime deadline, Integer targetNumber, String content, String depositBank,
 		String depositName, String depositAccount, String price, String hostName,
-		String hostDescription, List<ProgramImage> images, List<Notice> notices) {
+		String hostDescription, List<String> imageUrlList) {
 		this.host = host;
 		this.title = title;
 		this.category = category;
@@ -105,7 +105,7 @@ public class Program extends BaseTimeEntity {
 		this.location = location;
 		this.postalCode = postalCode;
 		this.deadline = deadline;
-		this.isOpen = isOpen;
+		this.isOpen = true;
 		this.targetNumber = targetNumber;
 		this.registrantNumber = 0;
 		this.content = content;
@@ -116,7 +116,9 @@ public class Program extends BaseTimeEntity {
 		this.price = price;
 		this.hostDescription = hostDescription;
 		this.hostName = hostName;
-		this.images = images;
-		this.notices = notices;
+		this.images = imageUrlList.stream()
+			.map(url -> ProgramImage.builder().program(this).url(url).build())
+			.collect(Collectors.toList());
+		this.notices = List.of();
 	}
 }

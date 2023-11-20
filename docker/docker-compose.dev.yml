@@ -14,8 +14,6 @@ services:
       MYSQL_ROOT_PASSWORD:
       MYSQL_ALLOW_EMPTY_PASSWORD: true
       MYSQL_DATABASE: dhs_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
 
   spring:

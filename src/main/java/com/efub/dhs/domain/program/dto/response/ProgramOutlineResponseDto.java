@@ -1,5 +1,6 @@
-package com.efub.dhs.domain.program.dto;
+package com.efub.dhs.domain.program.dto.response;
 
+import com.efub.dhs.domain.program.dto.GoalDto;
 import com.efub.dhs.domain.program.entity.Category;
 import com.efub.dhs.domain.program.entity.Program;
 
