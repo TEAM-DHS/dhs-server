@@ -45,7 +45,7 @@ public class ProgramService {
 	private final HeartService heartService;
 	private final RegistrationService registrationService;
 
-	private Member getCurrentUser() {
+	public Member getCurrentUser() {
 		String username = SecurityUtils.getCurrentUsername();
 		return memberRepository.findByUsername(username)
 			.orElseThrow(() -> new IllegalArgumentException("해당 아이디의 회원을 찾을 수 없습니다."));
@@ -115,11 +115,15 @@ public class ProgramService {
 	public List<ProgramOutlineResponseDto> findSimilarPrograms(Program program, Member member) {
 		List<Program> similarPrograms =
 			programRepository.findTop3ByCategory(program.getCategory());
+		return convertToProgramOutlineResponseDtoList(similarPrograms, member);
+	}
 
-		return similarPrograms.stream().map(similarProgram ->
-			new ProgramOutlineResponseDto(similarProgram,
-				calculateRemainingDays(similarProgram.getDeadline()),
-				findGoalByProgram(similarProgram.getTargetNumber(), similarProgram.getRegistrantNumber()),
+	public List<ProgramOutlineResponseDto> convertToProgramOutlineResponseDtoList(
+		List<Program> programList, Member member) {
+		return programList.stream().map(program ->
+			new ProgramOutlineResponseDto(program,
+				calculateRemainingDays(program.getDeadline()),
+				findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
 				heartService.existsByMemberAndProgram(member, program))
 		).collect(Collectors.toList());
 	}
