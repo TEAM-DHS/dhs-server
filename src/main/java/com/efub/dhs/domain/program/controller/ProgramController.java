@@ -34,7 +34,7 @@ public class ProgramController {
 
 	@GetMapping("/{programId}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public ProgramDetailResponseDto programFind(@PathVariable Long programId) {
+	public ProgramDetailResponseDto findProgramById(@PathVariable Long programId) {
 		return programService.findProgramById(programId);
 	}
 
