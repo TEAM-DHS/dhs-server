@@ -1,6 +1,8 @@
 package com.efub.dhs.global.jwt.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.efub.dhs.global.jwt.auth.JwtAuthProvider;
 import com.efub.dhs.global.jwt.entity.JwtToken;
@@ -34,6 +36,6 @@ public class JwtService {
 
 	private JwtToken getJwtToken(String accessToken) {
 		return jwtRepository.findByAccessToken(accessToken)
-			.orElseThrow(() -> new SecurityException("JWT token is invalid."));
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Access Token."));
 	}
 }
