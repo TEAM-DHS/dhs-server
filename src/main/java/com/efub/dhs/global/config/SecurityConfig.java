@@ -34,6 +34,7 @@ public class SecurityConfig {
 			.authorizeRequests()
 			.antMatchers(HttpMethod.GET).permitAll()
 			.antMatchers(HttpMethod.OPTIONS).permitAll()
+			.antMatchers("/auth/logout").authenticated()
 			.antMatchers("/auth/**", "/oauth/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
