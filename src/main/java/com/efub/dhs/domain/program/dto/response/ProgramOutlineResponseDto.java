@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProgramOutlineResponseDto {
-	private Long programId;
-	private String title;
-	private Category category;
-	private String thumbnailImage;
-	private Integer remainingDays;
-	private Boolean isOpen;
-	private GoalDto goal;
-	private String content;
-	private Boolean hasLike;
+	protected Long programId;
+	protected String title;
+	protected Category category;
+	protected String thumbnailImage;
+	protected Integer remainingDays;
+	protected Boolean isOpen;
+	protected GoalDto goal;
+	protected String content;
+	protected Boolean hasLike;
 
 	public ProgramOutlineResponseDto(Program program, Integer remainingDays, GoalDto goal, Boolean hasLike) {
 		this.programId = program.getProgramId();
