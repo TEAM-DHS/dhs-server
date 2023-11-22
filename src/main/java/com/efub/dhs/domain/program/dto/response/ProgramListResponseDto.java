@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ProgramCreatedResponseDto {
+public class ProgramListResponseDto {
 
 	private List<ProgramOutlineResponseDto> programs;
 	private PageInfoDto pageInfo;
