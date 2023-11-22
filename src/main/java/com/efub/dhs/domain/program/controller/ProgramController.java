@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
 import com.efub.dhs.domain.program.dto.request.ProgramListRequestDto;
 import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
+import com.efub.dhs.domain.program.dto.response.ProgramCreatedResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramCreationResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
@@ -51,6 +52,11 @@ public class ProgramController {
 		@RequestBody @Valid ProgramRegistrationRequestDto requestDto) {
 		Registration savedRegistration = programService.registerProgram(programId, requestDto);
 		return ProgramRegistrationResponseDto.from(savedRegistration);
+	}
+
+	@GetMapping("/created")
+	public ProgramCreatedResponseDto findProgramCreated(@RequestParam int page) {
+		return programMemberService.findProgramCreated(page);
 	}
 
 	@GetMapping("/liked")
