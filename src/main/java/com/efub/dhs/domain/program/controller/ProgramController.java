@@ -1,5 +1,7 @@
 package com.efub.dhs.domain.program.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import com.efub.dhs.domain.program.dto.response.ProgramCreatedResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramCreationResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramRegistrationResponseDto;
 import com.efub.dhs.domain.program.service.ProgramMemberService;
 import com.efub.dhs.domain.program.service.ProgramService;
@@ -67,5 +70,10 @@ public class ProgramController {
 	@GetMapping
 	public ProgramListResponseDto findProgramList(@RequestParam int page, ProgramListRequestDto requestDto) {
 		return programService.findProgramList(page, requestDto);
+	}
+
+	@GetMapping("/popular")
+	public List<ProgramOutlineResponseDto> findProgramPopular() {
+		return programService.findProgramPopular();
 	}
 }
