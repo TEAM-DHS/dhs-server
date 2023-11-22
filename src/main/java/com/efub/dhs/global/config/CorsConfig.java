@@ -14,7 +14,7 @@ public class CorsConfig implements WebMvcConfigurer {
 				"https://api.daehaengsa.kro.kr",
 				"http://localhost:3000",
 				"https://daehaengsa.kro.kr")
-			.allowedMethods("*")
+			.allowedMethods("GET", "POST", "PATCH", "DELETE")
 			.allowCredentials(true)
 			.maxAge(3000);
 	}
