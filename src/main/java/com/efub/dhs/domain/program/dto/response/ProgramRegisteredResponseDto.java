@@ -17,6 +17,7 @@ public class ProgramRegisteredResponseDto {
 	private List<ProgramOutlineWithStatusDto> programs;
 	private PageInfoDto pageInfo;
 
+	@Getter
 	public static class ProgramOutlineWithStatusDto extends ProgramOutlineResponseDto {
 		private final RefundStatus refundStatus;
 
