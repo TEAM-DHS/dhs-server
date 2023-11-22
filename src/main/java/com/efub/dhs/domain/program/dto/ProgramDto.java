@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class ProgramDto {
 	private Long programId;
 	private String title;
-	private Category category;
+	private String category;
 	private LocalDateTime schedule;
 	private String postalCode;
 	private String location;
@@ -35,7 +35,7 @@ public class ProgramDto {
 		String depositInfo, List<NoticeDto> notices, HostDto host) {
 		this.programId = program.getProgramId();
 		this.title = program.getTitle();
-		this.category = program.getCategory();
+		this.category = Category.to(program.getCategory());
 		this.schedule = program.getSchedule();
 		this.postalCode = program.getPostalCode();
 		this.location = program.getLocation();

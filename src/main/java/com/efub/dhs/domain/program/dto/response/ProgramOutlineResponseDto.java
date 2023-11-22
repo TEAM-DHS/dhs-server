@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ProgramOutlineResponseDto {
 	private Long programId;
 	private String title;
-	private Category category;
+	private String category;
 	private String thumbnailImage;
 	private Integer remainingDays;
 	private Boolean isOpen;
@@ -24,7 +24,7 @@ public class ProgramOutlineResponseDto {
 	public ProgramOutlineResponseDto(Program program, Integer remainingDays, GoalDto goal, Boolean hasLike) {
 		this.programId = program.getProgramId();
 		this.title = program.getTitle();
-		this.category = program.getCategory();
+		this.category = Category.to(program.getCategory());
 		this.thumbnailImage = program.getImages().get(0).getUrl();
 		this.remainingDays = remainingDays;
 		this.isOpen = program.getIsOpen();
