@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
 import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
-import com.efub.dhs.domain.program.dto.response.ProgramCreatedResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramCreationResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
-import com.efub.dhs.domain.program.dto.response.ProgramLikedResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramRegisteredResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramRegistrationResponseDto;
 import com.efub.dhs.domain.program.service.ProgramMemberService;
 import com.efub.dhs.domain.program.service.ProgramService;
@@ -54,12 +54,17 @@ public class ProgramController {
 	}
 
 	@GetMapping("/created")
-	public ProgramCreatedResponseDto findProgramCreated(@RequestParam int page) {
+	public ProgramListResponseDto findProgramCreated(@RequestParam int page) {
 		return programMemberService.findProgramCreated(page);
 	}
 
 	@GetMapping("/liked")
-	public ProgramLikedResponseDto findProgramLiked(@RequestParam int page) {
+	public ProgramListResponseDto findProgramLiked(@RequestParam int page) {
 		return programMemberService.findProgramLiked(page);
+	}
+
+	@GetMapping("/registered")
+	public ProgramRegisteredResponseDto findProgramRegistered(@RequestParam int page) {
+		return programMemberService.findProgramRegistered(page);
 	}
 }
