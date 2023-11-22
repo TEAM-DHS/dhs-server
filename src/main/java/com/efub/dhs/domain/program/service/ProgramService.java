@@ -160,4 +160,14 @@ public class ProgramService {
 			convertToProgramOutlineResponseDtoList(programPage.getContent(), currentUser);
 		return new ProgramListResponseDto(programOutlineResponseDtoList, pageInfoDto);
 	}
+
+	public List<ProgramOutlineResponseDto> findProgramPopular() {
+		List<Program> programList = programRepository.findTop5ByOrderByLikeNumberDesc();
+		return programList.stream().map(program ->
+			new ProgramOutlineResponseDto(program,
+				calculateRemainingDays(program.getDeadline()),
+				findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
+				false)
+		).collect(Collectors.toList());
+	}
 }
