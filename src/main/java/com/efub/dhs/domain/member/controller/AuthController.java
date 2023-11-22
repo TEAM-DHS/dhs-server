@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.efub.dhs.domain.member.dto.AuthRequestDto;
 import com.efub.dhs.domain.member.dto.AuthResponseDto;
@@ -47,6 +48,9 @@ public class AuthController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void logout(HttpServletRequest request) {
 		String accessToken = resolveToken(request);
+		if (accessToken == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Empty Access Token.");
+		}
 		jwtService.removeJwtToken(accessToken);
 	}
 
