@@ -63,8 +63,7 @@ public class ProgramRepositoryImpl implements ProgramRepositoryCustom {
 				categoryCondition(requestDto.getCategory())
 			)
 			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
-			.groupBy(program);
+			.limit(pageable.getPageSize());
 	}
 
 	private BooleanExpression keywordCondition(String keyword) {
