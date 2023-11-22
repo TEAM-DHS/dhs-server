@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.program.dto.PageInfoDto;
-import com.efub.dhs.domain.program.dto.response.ProgramLikedResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
 import com.efub.dhs.domain.program.entity.Program;
 import com.efub.dhs.domain.program.repository.ProgramRepository;
@@ -26,12 +26,12 @@ public class ProgramMemberService {
 	private final ProgramService programService;
 
 	@Transactional(readOnly = true)
-	public ProgramLikedResponseDto findProgramLiked(int page) {
+	public ProgramListResponseDto findProgramLiked(int page) {
 		Member currentUser = programService.getCurrentUser();
 		Page<Program> programPage = programRepository.findAllProgramLiked(currentUser, PageRequest.of(page, PAGE_SIZE));
 		PageInfoDto pageInfoDto = PageInfoDto.from(programPage);
 		List<ProgramOutlineResponseDto> programOutlineResponseDtoList =
 			programService.convertToProgramOutlineResponseDtoList(programPage.getContent(), currentUser);
-		return new ProgramLikedResponseDto(programOutlineResponseDtoList, pageInfoDto);
+		return new ProgramListResponseDto(programOutlineResponseDtoList, pageInfoDto);
 	}
 }
