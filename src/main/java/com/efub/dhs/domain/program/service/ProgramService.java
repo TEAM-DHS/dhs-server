@@ -5,6 +5,8 @@ import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +17,14 @@ import com.efub.dhs.domain.program.dto.GoalDto;
 import com.efub.dhs.domain.program.dto.HostDto;
 import com.efub.dhs.domain.program.dto.ImageDto;
 import com.efub.dhs.domain.program.dto.NoticeDto;
+import com.efub.dhs.domain.program.dto.PageInfoDto;
 import com.efub.dhs.domain.program.dto.ProgramDto;
 import com.efub.dhs.domain.program.dto.ProgramMemberDto;
 import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
+import com.efub.dhs.domain.program.dto.request.ProgramListRequestDto;
 import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
 import com.efub.dhs.domain.program.entity.Notice;
 import com.efub.dhs.domain.program.entity.Program;
@@ -37,6 +42,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class ProgramService {
+
+	private static final int PAGE_SIZE = 12;
 
 	private final ProgramRepository programRepository;
 	private final ProgramImageRepository programImageRepository;
@@ -142,5 +149,15 @@ public class ProgramService {
 		Program program = getProgram(programId);
 		Registration registration = requestDto.toEntity(currentUser, program);
 		return registrationService.saveRegistration(registration);
+	}
+
+	public ProgramListResponseDto findProgramList(int page, ProgramListRequestDto requestDto) {
+		Member currentUser = getCurrentUser();
+		Page<Program> programPage = programRepository.findProgramListByFilter(requestDto,
+			PageRequest.of(page, PAGE_SIZE));
+		PageInfoDto pageInfoDto = PageInfoDto.from(programPage);
+		List<ProgramOutlineResponseDto> programOutlineResponseDtoList =
+			convertToProgramOutlineResponseDtoList(programPage.getContent(), currentUser);
+		return new ProgramListResponseDto(programOutlineResponseDtoList, pageInfoDto);
 	}
 }

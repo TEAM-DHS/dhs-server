@@ -11,7 +11,7 @@ import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.program.entity.Category;
 import com.efub.dhs.domain.program.entity.Program;
 
-public interface ProgramRepository extends JpaRepository<Program, Long> {
+public interface ProgramRepository extends JpaRepository<Program, Long>, ProgramRepositoryCustom {
 
 	//List<Program> findTop3ByCategoryAndScheduleMonth(Category category, Month month);
 	List<Program> findTop3ByCategory(Category category);

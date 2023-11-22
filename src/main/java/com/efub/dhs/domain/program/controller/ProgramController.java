@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
+import com.efub.dhs.domain.program.dto.request.ProgramListRequestDto;
 import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
 import com.efub.dhs.domain.program.dto.response.ProgramCreatedResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramCreationResponseDto;
@@ -35,7 +36,7 @@ public class ProgramController {
 
 	@GetMapping("/{programId}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public ProgramDetailResponseDto programFind(@PathVariable Long programId) {
+	public ProgramDetailResponseDto findProgramById(@PathVariable Long programId) {
 		return programService.findProgramById(programId);
 	}
 
@@ -61,5 +62,10 @@ public class ProgramController {
 	@GetMapping("/liked")
 	public ProgramListResponseDto findProgramLiked(@RequestParam int page) {
 		return programMemberService.findProgramLiked(page);
+	}
+
+	@GetMapping
+	public ProgramListResponseDto findProgramList(@RequestParam int page, ProgramListRequestDto requestDto) {
+		return programService.findProgramList(page, requestDto);
 	}
 }

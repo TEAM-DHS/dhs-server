@@ -21,4 +21,8 @@ public enum Category {
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("Invalid Category name: " + name));
 	}
+
+	public static String to(Category category) {
+		return category.name;
+	}
 }
