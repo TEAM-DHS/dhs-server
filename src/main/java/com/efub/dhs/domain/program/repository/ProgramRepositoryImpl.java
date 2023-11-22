@@ -1,4 +1,4 @@
-package com.efub.dhs.domain.program.service;
+package com.efub.dhs.domain.program.repository;
 
 import static com.efub.dhs.domain.program.entity.QProgram.*;
 
@@ -14,7 +14,6 @@ import com.efub.dhs.domain.program.dto.request.ProgramListRequestDto;
 import com.efub.dhs.domain.program.entity.Category;
 import com.efub.dhs.domain.program.entity.Program;
 import com.efub.dhs.domain.program.entity.Sort;
-import com.efub.dhs.domain.program.repository.ProgramRepositoryCustom;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
