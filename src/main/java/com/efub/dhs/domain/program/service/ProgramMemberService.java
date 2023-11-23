@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.efub.dhs.domain.heart.service.HeartService;
 import com.efub.dhs.domain.member.entity.Member;
+import com.efub.dhs.domain.member.service.MemberService;
 import com.efub.dhs.domain.program.dto.PageInfoDto;
 import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
@@ -33,10 +34,11 @@ public class ProgramMemberService {
 	private final RegistrationRepository registrationRepository;
 	private final ProgramService programService;
 	private final HeartService heartService;
+	private final MemberService memberService;
 
 	@Transactional(readOnly = true)
 	public ProgramListResponseDto findProgramCreated(int page) {
-		Member currentUser = programService.getCurrentUser();
+		Member currentUser = memberService.getCurrentUser();
 		Page<Program> programPage = programRepository.findAllByHost(currentUser, PageRequest.of(page, PAGE_SIZE));
 		PageInfoDto pageInfoDto = PageInfoDto.createProgramPageInfoDto(programPage);
 		List<ProgramOutlineResponseDto> programOutlineResponseDtoList =
@@ -46,7 +48,7 @@ public class ProgramMemberService {
 
 	@Transactional(readOnly = true)
 	public ProgramListResponseDto findProgramLiked(int page) {
-		Member currentUser = programService.getCurrentUser();
+		Member currentUser = memberService.getCurrentUser();
 		Page<Program> programPage = programRepository.findAllProgramLiked(currentUser, PageRequest.of(page, PAGE_SIZE));
 		PageInfoDto pageInfoDto = PageInfoDto.createProgramPageInfoDto(programPage);
 		List<ProgramOutlineResponseDto> programOutlineResponseDtoList =
@@ -56,7 +58,7 @@ public class ProgramMemberService {
 
 	@Transactional(readOnly = true)
 	public ProgramRegisteredResponseDto findProgramRegistered(int page) {
-		Member currentUser = programService.getCurrentUser();
+		Member currentUser = memberService.getCurrentUser();
 		Page<Registration> registrationPage = registrationRepository.findRegisteredPrograms(
 			currentUser, PageRequest.of(page, PAGE_SIZE));
 		PageInfoDto pageInfoDto = PageInfoDto.createRegistrationPageInfoDto(registrationPage);
