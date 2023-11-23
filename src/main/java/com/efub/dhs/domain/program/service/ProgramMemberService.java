@@ -62,20 +62,20 @@ public class ProgramMemberService {
 		Page<Registration> registrationPage = registrationRepository.findRegisteredPrograms(
 			currentUser, PageRequest.of(page, PAGE_SIZE));
 		PageInfoDto pageInfoDto = PageInfoDto.createRegistrationPageInfoDto(registrationPage);
-		List<ProgramOutlineWithStatusDto> programOutlineWithStatusDtoList =
-			convertToProgramOutlineWithStatusDtoList(registrationPage.getContent(), currentUser);
-		return new ProgramRegisteredResponseDto(programOutlineWithStatusDtoList, pageInfoDto);
+		List<ProgramOutlineWithRegistrationDto> programOutlineWithRegistrationDtoList =
+			convertToProgramOutlineWithRegistrationDtoList(registrationPage.getContent(), currentUser);
+		return new ProgramRegisteredResponseDto(programOutlineWithRegistrationDtoList, pageInfoDto);
 	}
 
-	public List<ProgramOutlineWithStatusDto> convertToProgramOutlineWithStatusDtoList(
+	public List<ProgramOutlineWithRegistrationDto> convertToProgramOutlineWithRegistrationDtoList(
 		List<Registration> registrationList, Member member) {
 		return registrationList.stream().map(registration -> {
 			Program program = registration.getProgram();
-			return new ProgramOutlineWithStatusDto(program,
+			return new ProgramOutlineWithRegistrationDto(program,
 				programService.calculateRemainingDays(program.getDeadline()),
 				programService.findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
 				heartService.existsByMemberAndProgram(member, program),
-				registration.getRefundStatus());
+				registration);
 		}).collect(Collectors.toList());
 	}
 }
