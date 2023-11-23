@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.efub.dhs.domain.heart.service.HeartService;
 import com.efub.dhs.domain.member.entity.Member;
@@ -53,7 +55,7 @@ public class ProgramService {
 
 	public Program getProgram(Long programId) {
 		return programRepository.findById(programId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 ID의 행사를 찾을 수 없습니다."));
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 ID의 행사를 찾을 수 없습니다." + programId));
 	}
 
 	@Transactional(readOnly = true)
