@@ -121,4 +121,12 @@ public class Program extends BaseTimeEntity {
 			.collect(Collectors.toList());
 		this.notices = List.of();
 	}
+
+	public void increaseRegistrantNumber() {
+		this.registrantNumber++;
+	}
+
+	public void decreaseRegistrantNumber() {
+		this.registrantNumber--;
+	}
 }
