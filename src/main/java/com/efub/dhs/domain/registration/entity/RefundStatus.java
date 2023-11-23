@@ -2,6 +2,9 @@ package com.efub.dhs.domain.registration.entity;
 
 import java.util.Arrays;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -16,7 +19,8 @@ public enum RefundStatus {
 		return Arrays.stream(RefundStatus.values())
 			.filter(refundStatus -> refundStatus.name.equals(name))
 			.findFirst()
-			.orElseThrow(() -> new IllegalArgumentException("Invalid RefundStatus name: " + name));
+			.orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid RefundStatus name: " + name));
 	}
 
 	public static String to(RefundStatus refundStatus) {
