@@ -3,8 +3,10 @@ package com.efub.dhs.domain.registration.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.member.service.MemberService;
@@ -40,7 +42,7 @@ public class RegistrationService {
 			List<Registration> registrationList = registrationRepository.findAllByProgram(program);
 			return registrationList.stream().map(RegistrationResponseDto::from).collect(Collectors.toList());
 		} else {
-			throw new SecurityException("접근 권한이 없습니다.");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
 	}
 }
