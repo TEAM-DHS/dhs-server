@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.member.service.MemberService;
 import com.efub.dhs.domain.program.entity.Program;
+import com.efub.dhs.domain.registration.dto.RegistrationModificationRequestDto;
 import com.efub.dhs.domain.registration.dto.RegistrationResponseDto;
 import com.efub.dhs.domain.registration.entity.Registration;
 import com.efub.dhs.domain.registration.repository.RegistrationRepository;
@@ -25,6 +26,11 @@ public class RegistrationService {
 	private final RegistrationRepository registrationRepository;
 	private final MemberService memberService;
 
+	private Registration getRegistration(Long registrationId) {
+		return registrationRepository.findById(registrationId)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+	}
+
 	@Transactional(readOnly = true)
 	public Boolean existsByMemberAndProgram(Member member, Program program) {
 		return registrationRepository.existsByMemberAndProgram(member, program);
@@ -37,13 +43,16 @@ public class RegistrationService {
 
 	@Transactional(readOnly = true)
 	public Registration findRegistration(Long registrationId) {
-		Registration registration = registrationRepository.findById(registrationId)
-			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		Registration registration = getRegistration(registrationId);
 		Member currentUser = memberService.getCurrentUser();
+		validateCurrentUser(currentUser, registration);
+		return registration;
+	}
+
+	private void validateCurrentUser(Member currentUser, Registration registration) {
 		if (!currentUser.equals(registration.getMember())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
-		return registration;
 	}
 
 	@Transactional(readOnly = true)
@@ -55,5 +64,12 @@ public class RegistrationService {
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
+	}
+
+	public Registration modifyRegistration(Long registrationId, RegistrationModificationRequestDto requestDto) {
+		Registration registration = getRegistration(registrationId);
+		Member currentUser = memberService.getCurrentUser();
+		validateCurrentUser(currentUser, registration);
+		return registration.modifyRegistration(requestDto);
 	}
 }
