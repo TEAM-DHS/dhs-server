@@ -1,5 +1,7 @@
 package com.efub.dhs.domain.registration.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +17,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
 
 	@Query(value = "select r from Registration r join fetch Program p on r.program=p where r.member=?1")
 	Page<Registration> findRegisteredPrograms(Member registrant, Pageable pageable);
+
+	List<Registration> findAllByProgram(Program program);
 }

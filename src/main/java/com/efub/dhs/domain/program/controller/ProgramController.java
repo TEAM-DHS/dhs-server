@@ -20,12 +20,15 @@ import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
 import com.efub.dhs.domain.program.dto.response.ProgramCreationResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
-import com.efub.dhs.domain.program.dto.response.ProgramRegisteredResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramRegisteredResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramRegistrationResponseDto;
+import com.efub.dhs.domain.program.entity.Program;
 import com.efub.dhs.domain.program.service.ProgramMemberService;
 import com.efub.dhs.domain.program.service.ProgramService;
+import com.efub.dhs.domain.registration.dto.RegistrationResponseDto;
 import com.efub.dhs.domain.registration.entity.Registration;
+import com.efub.dhs.domain.registration.service.RegistrationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +39,7 @@ public class ProgramController {
 
 	private final ProgramService programService;
 	private final ProgramMemberService programMemberService;
+	private final RegistrationService registrationService;
 
 	@GetMapping("/{programId}")
 	@ResponseStatus(value = HttpStatus.OK)
@@ -70,8 +74,8 @@ public class ProgramController {
 	@GetMapping("/registered")
 	public ProgramRegisteredResponseDto findProgramRegistered(@RequestParam int page) {
 		return programMemberService.findProgramRegistered(page);
-  }
-  
+	}
+
 	@GetMapping
 	public ProgramListResponseDto findProgramList(@RequestParam int page, ProgramListRequestDto requestDto) {
 		return programService.findProgramList(page, requestDto);
@@ -80,5 +84,11 @@ public class ProgramController {
 	@GetMapping("/popular")
 	public List<ProgramOutlineResponseDto> findProgramPopular() {
 		return programService.findProgramPopular();
+	}
+
+	@GetMapping("/{programId}/registrations")
+	public List<RegistrationResponseDto> findRegistratorList(@PathVariable Long programId) {
+		Program program = programService.getProgram(programId);
+		return registrationService.findRegistratorList(program);
 	}
 }

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.efub.dhs.domain.heart.service.HeartService;
 import com.efub.dhs.domain.member.entity.Member;
-import com.efub.dhs.domain.member.repository.MemberRepository;
+import com.efub.dhs.domain.member.service.MemberService;
 import com.efub.dhs.domain.program.dto.GoalDto;
 import com.efub.dhs.domain.program.dto.HostDto;
 import com.efub.dhs.domain.program.dto.ImageDto;
@@ -34,7 +34,6 @@ import com.efub.dhs.domain.program.repository.ProgramImageRepository;
 import com.efub.dhs.domain.program.repository.ProgramRepository;
 import com.efub.dhs.domain.registration.entity.Registration;
 import com.efub.dhs.domain.registration.service.RegistrationService;
-import com.efub.dhs.global.utils.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,17 +47,11 @@ public class ProgramService {
 	private final ProgramRepository programRepository;
 	private final ProgramImageRepository programImageRepository;
 	private final NoticeRepository noticeRepository;
-	private final MemberRepository memberRepository;
+	private final MemberService memberService;
 	private final HeartService heartService;
 	private final RegistrationService registrationService;
 
-	public Member getCurrentUser() {
-		String username = SecurityUtils.getCurrentUsername();
-		return memberRepository.findByUsername(username)
-			.orElseThrow(() -> new IllegalArgumentException("해당 아이디의 회원을 찾을 수 없습니다."));
-	}
-
-	private Program getProgram(Long programId) {
+	public Program getProgram(Long programId) {
 		return programRepository.findById(programId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 ID의 행사를 찾을 수 없습니다."));
 	}
@@ -67,7 +60,7 @@ public class ProgramService {
 	public ProgramDetailResponseDto findProgramById(Long programId) {
 		Program program = getProgram(programId);
 
-		Member currentUser = getCurrentUser();
+		Member currentUser = memberService.getCurrentUser();
 
 		Integer remainingDays = calculateRemainingDays(program.getDeadline());
 
@@ -136,7 +129,7 @@ public class ProgramService {
 	}
 
 	public Long createProgram(ProgramCreationRequestDto requestDto) {
-		Member currentUser = getCurrentUser();
+		Member currentUser = memberService.getCurrentUser();
 		Program program = requestDto.toEntity(currentUser);
 		Long programId = programRepository.save(program).getProgramId();
 		List<ProgramImage> images = program.getImages();
@@ -145,14 +138,14 @@ public class ProgramService {
 	}
 
 	public Registration registerProgram(Long programId, ProgramRegistrationRequestDto requestDto) {
-		Member currentUser = getCurrentUser();
+		Member currentUser = memberService.getCurrentUser();
 		Program program = getProgram(programId);
 		Registration registration = requestDto.toEntity(currentUser, program);
 		return registrationService.saveRegistration(registration);
 	}
 
 	public ProgramListResponseDto findProgramList(int page, ProgramListRequestDto requestDto) {
-		Member currentUser = getCurrentUser();
+		Member currentUser = memberService.getCurrentUser();
 		Page<Program> programPage = programRepository.findProgramListByFilter(requestDto,
 			PageRequest.of(page, PAGE_SIZE));
 		PageInfoDto pageInfoDto = PageInfoDto.createProgramPageInfoDto(programPage);
