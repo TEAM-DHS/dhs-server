@@ -155,7 +155,7 @@ public class ProgramService {
 		Member currentUser = getCurrentUser();
 		Page<Program> programPage = programRepository.findProgramListByFilter(requestDto,
 			PageRequest.of(page, PAGE_SIZE));
-		PageInfoDto pageInfoDto = PageInfoDto.from(programPage);
+		PageInfoDto pageInfoDto = PageInfoDto.createProgramPageInfoDto(programPage);
 		List<ProgramOutlineResponseDto> programOutlineResponseDtoList =
 			convertToProgramOutlineResponseDtoList(programPage.getContent(), currentUser);
 		return new ProgramListResponseDto(programOutlineResponseDtoList, pageInfoDto);
