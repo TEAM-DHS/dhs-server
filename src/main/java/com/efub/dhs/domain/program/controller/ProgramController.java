@@ -55,7 +55,7 @@ public class ProgramController {
 
 	@PostMapping("/{programId}")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ProgramRegistrationResponseDto applyProgram(@PathVariable Long programId,
+	public ProgramRegistrationResponseDto registerProgram(@PathVariable Long programId,
 		@RequestBody @Valid ProgramRegistrationRequestDto requestDto) {
 		Registration savedRegistration = programService.registerProgram(programId, requestDto);
 		return ProgramRegistrationResponseDto.from(savedRegistration);
