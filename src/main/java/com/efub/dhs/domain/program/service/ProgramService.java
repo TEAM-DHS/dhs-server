@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.efub.dhs.domain.heart.service.HeartService;
 import com.efub.dhs.domain.member.entity.Member;
@@ -135,6 +137,17 @@ public class ProgramService {
 		List<ProgramImage> images = program.getImages();
 		programImageRepository.saveAll(images);
 		return programId;
+	}
+
+	public ProgramDetailResponseDto closeProgram(Long programId) {
+		Member currentUser = memberService.getCurrentUser();
+		Program program = getProgram(programId);
+		if (currentUser.equals(program.getHost())) {
+			program.closeProgram();
+			return findProgramById(program.getProgramId());
+		} else {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}
 	}
 
 	public Registration registerProgram(Long programId, ProgramRegistrationRequestDto requestDto) {
