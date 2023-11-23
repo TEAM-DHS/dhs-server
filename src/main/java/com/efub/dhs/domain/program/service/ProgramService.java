@@ -141,7 +141,9 @@ public class ProgramService {
 		Member currentUser = memberService.getCurrentUser();
 		Program program = getProgram(programId);
 		Registration registration = requestDto.toEntity(currentUser, program);
-		return registrationService.saveRegistration(registration);
+		Registration savedRegistration = registrationService.saveRegistration(registration);
+		program.increaseRegistrantNumber();
+		return savedRegistration;
 	}
 
 	public ProgramListResponseDto findProgramList(int page, ProgramListRequestDto requestDto) {
