@@ -1,5 +1,7 @@
 package com.efub.dhs.domain.program.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
+import com.efub.dhs.domain.program.dto.request.ProgramListRequestDto;
 import com.efub.dhs.domain.program.dto.request.ProgramRegistrationRequestDto;
 import com.efub.dhs.domain.program.dto.response.ProgramCreationResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramDetailResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramListResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramRegisteredResponseDto;
+import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramRegistrationResponseDto;
 import com.efub.dhs.domain.program.service.ProgramMemberService;
 import com.efub.dhs.domain.program.service.ProgramService;
@@ -35,7 +39,7 @@ public class ProgramController {
 
 	@GetMapping("/{programId}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public ProgramDetailResponseDto programFind(@PathVariable Long programId) {
+	public ProgramDetailResponseDto findProgramById(@PathVariable Long programId) {
 		return programService.findProgramById(programId);
 	}
 
@@ -66,5 +70,15 @@ public class ProgramController {
 	@GetMapping("/registered")
 	public ProgramRegisteredResponseDto findProgramRegistered(@RequestParam int page) {
 		return programMemberService.findProgramRegistered(page);
+  }
+  
+	@GetMapping
+	public ProgramListResponseDto findProgramList(@RequestParam int page, ProgramListRequestDto requestDto) {
+		return programService.findProgramList(page, requestDto);
+	}
+
+	@GetMapping("/popular")
+	public List<ProgramOutlineResponseDto> findProgramPopular() {
+		return programService.findProgramPopular();
 	}
 }

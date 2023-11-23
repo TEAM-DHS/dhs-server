@@ -11,7 +11,7 @@ import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.program.entity.Category;
 import com.efub.dhs.domain.program.entity.Program;
 
-public interface ProgramRepository extends JpaRepository<Program, Long> {
+public interface ProgramRepository extends JpaRepository<Program, Long>, ProgramRepositoryCustom {
 
 	//List<Program> findTop3ByCategoryAndScheduleMonth(Category category, Month month);
 	List<Program> findTop3ByCategory(Category category);
@@ -20,4 +20,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
 	@Query(value = "select p from Program p join fetch Heart h on h.program=p where h.member=?1")
 	Page<Program> findAllProgramLiked(Member member, Pageable pageable);
+	
+	List<Program> findTop5ByOrderByLikeNumberDesc();
 }
