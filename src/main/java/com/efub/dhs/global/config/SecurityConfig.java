@@ -33,12 +33,9 @@ public class SecurityConfig {
 			.and()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.OPTIONS).permitAll()
-			.antMatchers("/programs/created",
-				"/programs/liked",
-				"/programs/registered",
-				"/auth/logout").authenticated()
+			.antMatchers("/programs/created", "/programs/liked", "/programs/registered", "/auth/logout").authenticated()
 			.antMatchers("/auth/**", "/oauth/**").permitAll()
-			.antMatchers(HttpMethod.GET, "/programs", "/programs/*").permitAll()
+			.antMatchers(HttpMethod.GET, "/docs", "/swagger-ui/**", "/programs", "/programs/*").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilterBefore(new JwtFilter(jwtAuthProvider), UsernamePasswordAuthenticationFilter.class)
