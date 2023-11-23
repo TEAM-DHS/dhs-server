@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,6 +60,12 @@ public class ProgramController {
 		@RequestBody @Valid ProgramRegistrationRequestDto requestDto) {
 		Registration savedRegistration = programService.registerProgram(programId, requestDto);
 		return ProgramRegistrationResponseDto.from(savedRegistration);
+	}
+
+	@PatchMapping("/{programId}/closed")
+	@ResponseStatus(value = HttpStatus.OK)
+	public ProgramDetailResponseDto closeProgram(@PathVariable Long programId) {
+		return programService.closeProgram(programId);
 	}
 
 	@GetMapping("/created")
