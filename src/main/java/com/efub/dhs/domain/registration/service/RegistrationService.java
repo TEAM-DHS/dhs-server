@@ -36,6 +36,17 @@ public class RegistrationService {
 	}
 
 	@Transactional(readOnly = true)
+	public Registration findRegistration(Long registrationId) {
+		Registration registration = registrationRepository.findById(registrationId)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		Member currentUser = memberService.getCurrentUser();
+		if (!currentUser.equals(registration.getMember())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}
+		return registration;
+	}
+
+	@Transactional(readOnly = true)
 	public List<RegistrationResponseDto> findRegistratorList(Program program) {
 		Member member = memberService.getCurrentUser();
 		if (member.equals(program.getHost())) {
