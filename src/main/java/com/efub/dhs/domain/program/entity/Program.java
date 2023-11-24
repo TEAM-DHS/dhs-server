@@ -121,4 +121,8 @@ public class Program extends BaseTimeEntity {
 			.collect(Collectors.toList());
 		this.notices = List.of();
 	}
+
+	public void closeProgram() {
+		this.isOpen = false;
+	}
 }
