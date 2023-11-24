@@ -32,13 +32,14 @@ public class SecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.antMatchers(HttpMethod.OPTIONS).permitAll()
 			.antMatchers("/programs/created",
 				"/programs/liked",
 				"/programs/registered",
+				"/programs/*/registrations",
 				"/auth/logout").authenticated()
 			.antMatchers("/auth/**", "/oauth/**").permitAll()
-			.antMatchers(HttpMethod.GET, "/programs", "/programs/*").permitAll()
+			.antMatchers(HttpMethod.GET).permitAll()
+			.antMatchers(HttpMethod.OPTIONS).permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilterBefore(new JwtFilter(jwtAuthProvider), UsernamePasswordAuthenticationFilter.class)
