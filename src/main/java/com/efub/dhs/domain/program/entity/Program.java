@@ -128,5 +128,9 @@ public class Program extends BaseTimeEntity {
 
 	public void decreaseRegistrantNumber() {
 		this.registrantNumber--;
+  }
+  
+	public void closeProgram() {
+		this.isOpen = false;
 	}
 }

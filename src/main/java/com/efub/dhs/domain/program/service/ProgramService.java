@@ -139,6 +139,17 @@ public class ProgramService {
 		return programId;
 	}
 
+	public ProgramDetailResponseDto closeProgram(Long programId) {
+		Member currentUser = memberService.getCurrentUser();
+		Program program = getProgram(programId);
+		if (currentUser.equals(program.getHost())) {
+			program.closeProgram();
+			return findProgramById(program.getProgramId());
+		} else {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}
+	}
+
 	public Registration registerProgram(Long programId, ProgramRegistrationRequestDto requestDto) {
 		Member currentUser = memberService.getCurrentUser();
 		Program program = getProgram(programId);
