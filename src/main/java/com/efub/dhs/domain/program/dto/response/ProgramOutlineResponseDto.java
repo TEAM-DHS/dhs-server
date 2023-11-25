@@ -16,6 +16,7 @@ public class ProgramOutlineResponseDto {
 	private String category;
 	private String thumbnailImage;
 	private Integer remainingDays;
+	private Long likeNumber;
 	private Boolean isOpen;
 	private GoalDto goal;
 	private String content;
@@ -27,6 +28,7 @@ public class ProgramOutlineResponseDto {
 		this.category = Category.to(program.getCategory());
 		this.thumbnailImage = program.getImages().get(0).getUrl();
 		this.remainingDays = remainingDays;
+		this.likeNumber = program.getLikeNumber();
 		this.isOpen = program.getIsOpen();
 		this.goal = goal;
 		this.content = program.getContent();
