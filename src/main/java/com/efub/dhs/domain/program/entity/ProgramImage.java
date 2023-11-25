@@ -33,4 +33,8 @@ public class ProgramImage {
 		this.program = program;
 		this.url = url;
 	}
+
+	public void setProgram(Program program) {
+		this.program = program;
+	}
 }

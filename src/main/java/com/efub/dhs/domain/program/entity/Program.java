@@ -2,7 +2,6 @@ package com.efub.dhs.domain.program.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -97,7 +96,7 @@ public class Program extends BaseTimeEntity {
 	public Program(Member host, String title, Category category, LocalDateTime schedule, String location,
 		String postalCode, LocalDateTime deadline, Integer targetNumber, String content, String depositBank,
 		String depositName, String depositAccount, String price, String hostName,
-		String hostDescription, List<String> imageUrlList) {
+		String hostDescription) {
 		this.host = host;
 		this.title = title;
 		this.category = category;
@@ -116,9 +115,6 @@ public class Program extends BaseTimeEntity {
 		this.price = price;
 		this.hostDescription = hostDescription;
 		this.hostName = hostName;
-		this.images = imageUrlList.stream()
-			.map(url -> ProgramImage.builder().program(this).url(url).build())
-			.collect(Collectors.toList());
 		this.notices = List.of();
 	}
 
@@ -128,8 +124,8 @@ public class Program extends BaseTimeEntity {
 
 	public void decreaseRegistrantNumber() {
 		this.registrantNumber--;
-  }
-  
+	}
+
 	public void closeProgram() {
 		this.isOpen = false;
 	}

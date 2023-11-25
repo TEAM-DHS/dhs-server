@@ -149,13 +149,15 @@ public class ProgramService {
 		}
 	}
 
-	public Long createProgram(ProgramCreationRequestDto requestDto) {
+	public Long createProgram(ProgramCreationRequestDto requestDto, List<ProgramImage> programImages) {
 		Member currentUser = memberService.getCurrentUser();
 		Program program = requestDto.toEntity(currentUser);
-		Long programId = programRepository.save(program).getProgramId();
-		List<ProgramImage> images = program.getImages();
-		programImageRepository.saveAll(images);
-		return programId;
+		Program savedProgram = programRepository.save(program);
+		for (ProgramImage programImage : programImages) {
+			programImage.setProgram(savedProgram);
+			programImageRepository.save(programImage);
+		}
+		return savedProgram.getProgramId();
 	}
 
 	public ProgramDetailResponseDto closeProgram(Long programId) {
