@@ -1,10 +1,8 @@
 package com.efub.dhs.domain.program.dto.request;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.efub.dhs.domain.member.entity.Member;
@@ -47,8 +45,6 @@ public class ProgramCreationRequestDto {
 	private String hostName;
 	@NotBlank
 	private String hostDescription;
-	@NotEmpty
-	private List<String> images;
 
 	public Program toEntity(Member member) {
 		return Program.builder()
@@ -67,7 +63,6 @@ public class ProgramCreationRequestDto {
 			.price(price)
 			.hostName(hostName)
 			.hostDescription(hostDescription)
-			.imageUrlList(images)
 			.build();
 	}
 }
