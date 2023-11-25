@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.efub.dhs.domain.program.dto.request.NoticeCreationRequestDto;
 import com.efub.dhs.domain.program.dto.request.ProgramCreationRequestDto;
@@ -27,7 +30,9 @@ import com.efub.dhs.domain.program.dto.response.ProgramOutlineResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramRegisteredResponseDto;
 import com.efub.dhs.domain.program.dto.response.ProgramRegistrationResponseDto;
 import com.efub.dhs.domain.program.entity.Program;
+import com.efub.dhs.domain.program.entity.ProgramImage;
 import com.efub.dhs.domain.program.service.NoticeService;
+import com.efub.dhs.domain.program.service.ProgramImageService;
 import com.efub.dhs.domain.program.service.ProgramMemberService;
 import com.efub.dhs.domain.program.service.ProgramService;
 import com.efub.dhs.domain.registration.dto.RegistrationResponseDto;
@@ -35,7 +40,9 @@ import com.efub.dhs.domain.registration.entity.Registration;
 import com.efub.dhs.domain.registration.service.RegistrationService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/programs")
@@ -45,6 +52,7 @@ public class ProgramController {
 	private final ProgramMemberService programMemberService;
 	private final RegistrationService registrationService;
 	private final NoticeService noticeService;
+	private final ProgramImageService programImageService;
 
 	@GetMapping("/{programId}")
 	@ResponseStatus(value = HttpStatus.OK)
@@ -52,10 +60,14 @@ public class ProgramController {
 		return programService.findProgramById(programId);
 	}
 
-	@PostMapping
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ProgramCreationResponseDto createProgram(@RequestBody @Valid ProgramCreationRequestDto requestDto) {
-		return new ProgramCreationResponseDto(programService.createProgram(requestDto));
+	public ProgramCreationResponseDto createProgram(
+		@RequestPart(value = "data") @Valid ProgramCreationRequestDto requestDto,
+		@RequestPart(value = "image") List<MultipartFile> images) {
+		List<ProgramImage> programImages = programImageService.createProgramImages(images);
+		Long programId = programService.createProgram(requestDto, programImages);
+		return new ProgramCreationResponseDto(programId);
 	}
 
 	@PostMapping("/{programId}")
