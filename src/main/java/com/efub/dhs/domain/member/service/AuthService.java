@@ -1,10 +1,12 @@
 package com.efub.dhs.domain.member.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.member.repository.MemberRepository;
@@ -28,7 +30,7 @@ public class AuthService {
 	public Member signUp(String username, String password) {
 		boolean exists = memberRepository.existsByUsername(username);
 		if (exists) {
-			throw new IllegalArgumentException("동일한 아이디의 유저가 존재합니다.");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "동일한 아이디의 유저가 존재합니다.");
 		}
 		String encodedPassword = passwordEncoder.encode(password);
 		Member member = Member.builder().username(username).password(encodedPassword).build();

@@ -6,7 +6,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
-      test: [ 'CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$${MYSQL_ROOT_PASSWORD}' ]
+      test: [ 'CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root' ]
       interval: 10s
       timeout: 2s
       retries: 100
@@ -14,8 +14,6 @@ services:
       MYSQL_ROOT_PASSWORD:
       MYSQL_ALLOW_EMPTY_PASSWORD: true
       MYSQL_DATABASE: dhs_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
 
   spring:
