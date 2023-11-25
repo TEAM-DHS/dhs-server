@@ -36,6 +36,7 @@ import com.efub.dhs.domain.program.repository.ProgramImageRepository;
 import com.efub.dhs.domain.program.repository.ProgramRepository;
 import com.efub.dhs.domain.registration.entity.Registration;
 import com.efub.dhs.domain.registration.service.RegistrationService;
+import com.efub.dhs.global.utils.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -62,7 +63,7 @@ public class ProgramService {
 	public ProgramDetailResponseDto findProgramById(Long programId) {
 		Program program = getProgram(programId);
 
-		Member currentUser = memberService.getCurrentUser();
+		Member currentUser = isLoggedIn(SecurityUtils.getCurrentUsername());
 
 		Integer remainingDays = calculateRemainingDays(program.getDeadline());
 
@@ -108,9 +109,18 @@ public class ProgramService {
 	}
 
 	public ProgramMemberDto findProgramMemberInfo(Program program, Member member) {
-		Boolean hasLike = heartService.existsByMemberAndProgram(member, program);
-		Boolean hasRegistration = registrationService.existsByMemberAndProgram(member, program);
-		Boolean isHost = program.getHost().equals(member);
+		boolean hasLike;
+		boolean hasRegistration;
+		boolean isHost;
+		if (member == null) {
+			hasLike = false;
+			hasRegistration = false;
+			isHost = false;
+		} else {
+			hasLike = heartService.existsByMemberAndProgram(member, program);
+			hasRegistration = registrationService.existsByMemberAndProgram(member, program);
+			isHost = program.getHost().equals(member);
+		}
 		return new ProgramMemberDto(hasLike, hasRegistration, isHost);
 	}
 
@@ -122,12 +132,21 @@ public class ProgramService {
 
 	public List<ProgramOutlineResponseDto> convertToProgramOutlineResponseDtoList(
 		List<Program> programList, Member member) {
-		return programList.stream().map(program ->
-			new ProgramOutlineResponseDto(program,
-				calculateRemainingDays(program.getDeadline()),
-				findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
-				heartService.existsByMemberAndProgram(member, program))
-		).collect(Collectors.toList());
+		if (member == null) {
+			return programList.stream().map(program ->
+				new ProgramOutlineResponseDto(program,
+					calculateRemainingDays(program.getDeadline()),
+					findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
+					false)
+			).collect(Collectors.toList());
+		} else {
+			return programList.stream().map(program ->
+				new ProgramOutlineResponseDto(program,
+					calculateRemainingDays(program.getDeadline()),
+					findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
+					heartService.existsByMemberAndProgram(member, program))
+			).collect(Collectors.toList());
+		}
 	}
 
 	public Long createProgram(ProgramCreationRequestDto requestDto) {
@@ -160,7 +179,8 @@ public class ProgramService {
 	}
 
 	public ProgramListResponseDto findProgramList(int page, ProgramListRequestDto requestDto) {
-		Member currentUser = memberService.getCurrentUser();
+		Member currentUser = isLoggedIn(SecurityUtils.getCurrentUsername());
+
 		Page<Program> programPage = programRepository.findProgramListByFilter(requestDto,
 			PageRequest.of(page, PAGE_SIZE));
 		PageInfoDto pageInfoDto = PageInfoDto.createProgramPageInfoDto(programPage);
@@ -177,5 +197,15 @@ public class ProgramService {
 				findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
 				false)
 		).collect(Collectors.toList());
+	}
+
+	public Member isLoggedIn(String username) {
+		Member currentUser;
+		if (username.equals("anonymousUser")) {
+			currentUser = null;
+		} else {
+			currentUser = memberService.getCurrentUser();
+		}
+		return currentUser;
 	}
 }

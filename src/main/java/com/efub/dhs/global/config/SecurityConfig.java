@@ -38,7 +38,7 @@ public class SecurityConfig {
 				"/programs/registered",
 				"/programs/*/registrations",
 				"/auth/logout").authenticated()
-			.antMatchers("/auth/**", "/oauth/**").permitAll()
+			.antMatchers("/auth/**", "/oauth/**", "/programs/**").permitAll()
 			.antMatchers(HttpMethod.GET).permitAll()
 			.anyRequest().authenticated()
 			.and()
