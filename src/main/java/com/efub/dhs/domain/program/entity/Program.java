@@ -122,6 +122,14 @@ public class Program extends BaseTimeEntity {
 		this.notices = List.of();
 	}
 
+	public void increaseRegistrantNumber() {
+		this.registrantNumber++;
+	}
+
+	public void decreaseRegistrantNumber() {
+		this.registrantNumber--;
+  }
+  
 	public void closeProgram() {
 		this.isOpen = false;
 	}

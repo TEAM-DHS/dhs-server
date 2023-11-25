@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 
 import com.efub.dhs.domain.member.entity.Member;
 import com.efub.dhs.domain.program.entity.Program;
+import com.efub.dhs.domain.registration.dto.RegistrationModificationRequestDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -83,5 +84,27 @@ public class Registration {
 		this.refundBank = refundBank;
 		this.refundAccount = refundAccount;
 		this.refundName = refundName;
+	}
+
+	public Registration modifyRegistration(RegistrationModificationRequestDto requestDto) {
+		if (requestDto.getRegistrantName() != null) {
+			this.registrantName = requestDto.getRegistrantName();
+		}
+		if (requestDto.getRegistrantPhone() != null) {
+			this.registrantPhone = requestDto.getRegistrantPhone();
+		}
+		if (requestDto.getRefundBank() != null) {
+			this.refundBank = requestDto.getRefundBank();
+		}
+		if (requestDto.getRefundAccount() != null) {
+			this.refundAccount = requestDto.getRefundAccount();
+		}
+		if (requestDto.getRefundName() != null) {
+			this.refundName = requestDto.getRefundName();
+		}
+		if (requestDto.getRefundStatus() != null) {
+			this.refundStatus = RefundStatus.from(requestDto.getRefundStatus());
+		}
+		return this;
 	}
 }

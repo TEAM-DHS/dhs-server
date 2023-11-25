@@ -55,7 +55,7 @@ public class ProgramService {
 
 	public Program getProgram(Long programId) {
 		return programRepository.findById(programId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 ID의 행사를 찾을 수 없습니다."));
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 ID의 행사를 찾을 수 없습니다." + programId));
 	}
 
 	@Transactional(readOnly = true)
@@ -154,7 +154,9 @@ public class ProgramService {
 		Member currentUser = memberService.getCurrentUser();
 		Program program = getProgram(programId);
 		Registration registration = requestDto.toEntity(currentUser, program);
-		return registrationService.saveRegistration(registration);
+		Registration savedRegistration = registrationService.saveRegistration(registration);
+		program.increaseRegistrantNumber();
+		return savedRegistration;
 	}
 
 	public ProgramListResponseDto findProgramList(int page, ProgramListRequestDto requestDto) {

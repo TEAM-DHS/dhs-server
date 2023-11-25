@@ -36,6 +36,6 @@ public class JwtService {
 
 	private JwtToken getJwtToken(String accessToken) {
 		return jwtRepository.findByAccessToken(accessToken)
-			.orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Access Token."));
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Access Token."));
 	}
 }

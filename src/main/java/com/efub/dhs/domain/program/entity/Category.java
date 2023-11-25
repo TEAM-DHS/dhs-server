@@ -2,6 +2,9 @@ package com.efub.dhs.domain.program.entity;
 
 import java.util.Arrays;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -19,7 +22,7 @@ public enum Category {
 		return Arrays.stream(Category.values())
 			.filter(category -> category.name.equals(name))
 			.findFirst()
-			.orElseThrow(() -> new IllegalArgumentException("Invalid Category name: " + name));
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Category name: " + name));
 	}
 
 	public static String to(Category category) {
