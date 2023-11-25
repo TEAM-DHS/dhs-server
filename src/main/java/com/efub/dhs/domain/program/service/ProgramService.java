@@ -2,6 +2,7 @@ package com.efub.dhs.domain.program.service;
 
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -190,13 +191,21 @@ public class ProgramService {
 	}
 
 	public List<ProgramOutlineResponseDto> findProgramPopular() {
-		List<Program> programList = programRepository.findTop5ByOrderByLikeNumberDesc();
-		return programList.stream().map(program ->
-			new ProgramOutlineResponseDto(program,
-				calculateRemainingDays(program.getDeadline()),
-				findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
-				false)
-		).collect(Collectors.toList());
+		List<Program> programList = programRepository.findAllByIsOpenOrderByLikeNumberDesc(true);
+		List<ProgramOutlineResponseDto> popularProgramList = new ArrayList<>();
+
+		programList.forEach(program -> {
+			if (popularProgramList.size() == 5) {
+				return;
+			}
+			Integer remainingDays = calculateRemainingDays(program.getDeadline());
+			if (remainingDays >= 0) {
+				popularProgramList.add(new ProgramOutlineResponseDto(program, remainingDays,
+					findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
+					false));
+			}
+		});
+		return popularProgramList;
 	}
 
 	public Member isLoggedIn(String username) {
