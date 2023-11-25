@@ -36,7 +36,7 @@ public class ProgramRepositoryImpl implements ProgramRepositoryCustom {
 		OrderSpecifier<Long> popularSpecifier = program.likeNumber.desc();
 		OrderSpecifier<LocalDateTime> deadlineSpecifier = program.deadline.asc();
 
-		JPAQuery<Program> foundQuery = findQuery(requestDto, pageable);
+		JPAQuery<Program> foundQuery = findQuery(requestDto);
 
 		Sort sort = requestDto.getSort();
 		if (sort == null) {
@@ -51,19 +51,23 @@ public class ProgramRepositoryImpl implements ProgramRepositoryCustom {
 			throw new RuntimeException("행사를 찾을 수 없습니다.");
 		}
 
-		return new PageImpl<>(programList);
+		int page = pageable.getPageNumber();
+		int size = pageable.getPageSize();
+		int offset = page * size;
+		int total = programList.size();
+		int end = Math.min(offset + size, total);
+
+		return new PageImpl<>(programList.subList(offset, end), pageable, total);
 	}
 
-	private JPAQuery<Program> findQuery(ProgramListRequestDto requestDto, Pageable pageable) {
+	private JPAQuery<Program> findQuery(ProgramListRequestDto requestDto) {
 		return queryFactory
 			.selectFrom(program)
 			.where(
 				program.isOpen.eq(true),
 				keywordCondition(requestDto.getKeyword()),
 				categoryCondition(requestDto.getCategory())
-			)
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize());
+			);
 	}
 
 	private BooleanExpression keywordCondition(String keyword) {
