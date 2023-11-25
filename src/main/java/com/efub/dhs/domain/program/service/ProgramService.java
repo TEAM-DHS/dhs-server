@@ -126,9 +126,13 @@ public class ProgramService {
 	}
 
 	public List<ProgramOutlineResponseDto> findSimilarPrograms(Program program, Member member) {
-		List<Program> similarPrograms =
-			programRepository.findTop3ByCategory(program.getCategory());
-		return convertToProgramOutlineResponseDtoList(similarPrograms, member);
+		List<Program> similarProgramList =
+			programRepository.findAllByCategoryAndIsOpenOrderByDeadlineAsc(program.getCategory(), true);
+		similarProgramList.remove(program);
+
+		List<Program> filteredSimilarProgramList = getProgramByRemainingDays(similarProgramList, 3);
+
+		return convertToProgramOutlineResponseDtoList(filteredSimilarProgramList, member);
 	}
 
 	public List<ProgramOutlineResponseDto> convertToProgramOutlineResponseDtoList(
@@ -191,21 +195,25 @@ public class ProgramService {
 	}
 
 	public List<ProgramOutlineResponseDto> findProgramPopular() {
-		List<Program> programList = programRepository.findAllByIsOpenOrderByLikeNumberDesc(true);
-		List<ProgramOutlineResponseDto> popularProgramList = new ArrayList<>();
+		List<Program> popularProgramList = programRepository.findAllByIsOpenOrderByLikeNumberDesc(true);
+		List<Program> filteredPopularProgramList = getProgramByRemainingDays(popularProgramList, 5);
+		return convertToProgramOutlineResponseDtoList(filteredPopularProgramList, null);
+	}
+
+	public List<Program> getProgramByRemainingDays(List<Program> programList, int size) {
+		List<Program> filteredList = new ArrayList<>();
 
 		programList.forEach(program -> {
-			if (popularProgramList.size() == 5) {
+			if (filteredList.size() == size) {
 				return;
 			}
 			Integer remainingDays = calculateRemainingDays(program.getDeadline());
 			if (remainingDays >= 0) {
-				popularProgramList.add(new ProgramOutlineResponseDto(program, remainingDays,
-					findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
-					false));
+				filteredList.add(program);
 			}
 		});
-		return popularProgramList;
+
+		return filteredList;
 	}
 
 	public Member isLoggedIn(String username) {
