@@ -13,6 +13,7 @@ public class CorsConfig implements WebMvcConfigurer {
 			.allowedOrigins("http://api.daehaengsa.kro.kr",
 				"https://api.daehaengsa.kro.kr",
 				"http://localhost:3000",
+				"https://dhs-frontend.vercel.app",
 				"https://daehaengsa.kro.kr")
 			.allowedMethods("GET", "POST", "PATCH", "DELETE")
 			.allowCredentials(true)
