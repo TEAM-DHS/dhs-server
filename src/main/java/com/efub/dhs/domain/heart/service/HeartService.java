@@ -42,19 +42,22 @@ public class HeartService {
 		}
 	}
 
+	@Transactional
 	public ResponseEntity<HeartResponseDto> heartProgram(Long programId) {
 		Member currentUser = memberService.getCurrentUser();
 		Program program = programRepository.findById(programId)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 ID의 행사를 찾을 수 없습니다."));
 		Heart heart = getOrCreateHeart(currentUser, program);
-		return convertHeartExist(programId, heart);
+		return convertHeartExist(program, heart);
 	}
 
-	private ResponseEntity<HeartResponseDto> convertHeartExist(Long programId, Heart heart) {
+	private ResponseEntity<HeartResponseDto> convertHeartExist(Program program, Heart heart) {
+		Long programId = program.getProgramId();
 		// 좋아요 생성
 		if (Boolean.FALSE.equals(heart.getExist())) {
 			heart.activateHeart();
 			heartRepository.save(heart);
+			program.increaseLikeNumber();
 			String location = "/programs/" + programId;
 			return ResponseEntity
 				.created(URI.create(location))
@@ -63,6 +66,7 @@ public class HeartService {
 		// 좋아요 취소
 		heart.deactivateHeart();
 		heartRepository.save(heart);
+		program.decreaseLikeNumber();
 		return ResponseEntity
 			.ok()
 			.body(new HeartResponseDto(programId, heart.getHeartId(), heart.getExist()));
