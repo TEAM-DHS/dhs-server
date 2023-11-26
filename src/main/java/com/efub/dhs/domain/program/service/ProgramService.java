@@ -127,12 +127,9 @@ public class ProgramService {
 
 	public List<ProgramOutlineResponseDto> findSimilarPrograms(Program program, Member member) {
 		List<Program> similarProgramList =
-			programRepository.findAllByCategoryAndIsOpenOrderByDeadlineAsc(program.getCategory(), true);
-		similarProgramList.remove(program);
-
-		List<Program> filteredSimilarProgramList = getProgramByRemainingDays(similarProgramList, 3);
-
-		return convertToProgramOutlineResponseDtoList(filteredSimilarProgramList, member);
+			programRepository.findTop3ByCategoryAndIsOpenAndDeadlineAfterAndProgramIdNotOrderByDeadlineAsc(
+				program.getCategory(), true, LocalDateTime.now(), program.getProgramId());
+		return convertToProgramOutlineResponseDtoList(similarProgramList, member);
 	}
 
 	public List<ProgramOutlineResponseDto> convertToProgramOutlineResponseDtoList(
