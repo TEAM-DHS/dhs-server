@@ -126,6 +126,14 @@ public class Program extends BaseTimeEntity {
 		this.registrantNumber--;
 	}
 
+	public void increaseLikeNumber() {
+		this.likeNumber++;
+	}
+
+	public void decreaseLikeNumber() {
+		this.likeNumber--;
+	}
+
 	public void closeProgram() {
 		this.isOpen = false;
 	}
