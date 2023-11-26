@@ -13,13 +13,12 @@ import com.efub.dhs.domain.program.entity.Program;
 
 public interface ProgramRepository extends JpaRepository<Program, Long>, ProgramRepositoryCustom {
 
-	//List<Program> findTop3ByCategoryAndScheduleMonth(Category category, Month month);
-	List<Program> findTop3ByCategory(Category category);
+	List<Program> findAllByCategoryAndIsOpenOrderByDeadlineAsc(Category category, Boolean isOpen);
 
 	Page<Program> findAllByHost(Member host, Pageable pageable);
 
 	@Query(value = "select p from Program p join fetch Heart h on h.program=p where h.member=?1")
 	Page<Program> findAllProgramLiked(Member member, Pageable pageable);
-	
-	List<Program> findTop5ByOrderByLikeNumberDesc();
+
+	List<Program> findAllByIsOpenOrderByLikeNumberDesc(Boolean isOpen);
 }

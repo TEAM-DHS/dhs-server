@@ -2,6 +2,7 @@ package com.efub.dhs.domain.program.service;
 
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -125,9 +126,13 @@ public class ProgramService {
 	}
 
 	public List<ProgramOutlineResponseDto> findSimilarPrograms(Program program, Member member) {
-		List<Program> similarPrograms =
-			programRepository.findTop3ByCategory(program.getCategory());
-		return convertToProgramOutlineResponseDtoList(similarPrograms, member);
+		List<Program> similarProgramList =
+			programRepository.findAllByCategoryAndIsOpenOrderByDeadlineAsc(program.getCategory(), true);
+		similarProgramList.remove(program);
+
+		List<Program> filteredSimilarProgramList = getProgramByRemainingDays(similarProgramList, 3);
+
+		return convertToProgramOutlineResponseDtoList(filteredSimilarProgramList, member);
 	}
 
 	public List<ProgramOutlineResponseDto> convertToProgramOutlineResponseDtoList(
@@ -192,13 +197,25 @@ public class ProgramService {
 	}
 
 	public List<ProgramOutlineResponseDto> findProgramPopular() {
-		List<Program> programList = programRepository.findTop5ByOrderByLikeNumberDesc();
-		return programList.stream().map(program ->
-			new ProgramOutlineResponseDto(program,
-				calculateRemainingDays(program.getDeadline()),
-				findGoalByProgram(program.getTargetNumber(), program.getRegistrantNumber()),
-				false)
-		).collect(Collectors.toList());
+		List<Program> popularProgramList = programRepository.findAllByIsOpenOrderByLikeNumberDesc(true);
+		List<Program> filteredPopularProgramList = getProgramByRemainingDays(popularProgramList, 5);
+		return convertToProgramOutlineResponseDtoList(filteredPopularProgramList, null);
+	}
+
+	public List<Program> getProgramByRemainingDays(List<Program> programList, int size) {
+		List<Program> filteredList = new ArrayList<>();
+
+		programList.forEach(program -> {
+			if (filteredList.size() == size) {
+				return;
+			}
+			Integer remainingDays = calculateRemainingDays(program.getDeadline());
+			if (remainingDays >= 0) {
+				filteredList.add(program);
+			}
+		});
+
+		return filteredList;
 	}
 
 	public Member isLoggedIn(String username) {
