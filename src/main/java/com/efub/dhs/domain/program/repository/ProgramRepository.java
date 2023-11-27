@@ -19,7 +19,7 @@ public interface ProgramRepository extends JpaRepository<Program, Long>, Program
 
 	Page<Program> findAllByHost(Member host, Pageable pageable);
 
-	@Query(value = "select p from Program p join fetch Heart h on h.program=p where h.member=?1")
+	@Query(value = "select p from Program p join fetch Heart h on h.program=p where h.member=?1 and h.exist=true")
 	Page<Program> findAllProgramLiked(Member member, Pageable pageable);
 
 	List<Program> findTop5ByIsOpenAndDeadlineAfterOrderByLikeNumberDesc(Boolean isOpen, LocalDateTime deadline);
