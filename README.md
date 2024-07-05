@@ -15,8 +15,12 @@
 행사 주최 측은 행사를 더 많은 사용자들에게 홍보할 수 있으며, 행사 신청 과정과 신청자 정보를 모아보는 일을 대행사가 대신해 줌으로써 더 쉽게 행사를 홍보할 수 있습니다.
 
 ## 서비스 아키텍쳐
+![대행사 아키텍처](https://github.com/TEAM-DHS/dhs-server/assets/121334671/49fb5b33-6802-44b8-b385-a4bfd25d77e1)
+
 
 ## ERD
+![대행사 erd](https://github.com/TEAM-DHS/dhs-server/assets/121334671/11e1d25f-52fd-4bbe-a0b9-7a2dfd9db580)
+
 
 ## 팀원 소개
 
